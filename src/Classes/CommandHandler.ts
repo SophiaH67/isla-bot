@@ -22,7 +22,7 @@ export default class CommandHandler {
     }
   }
 
-  public handleMessage(ctx: BaseMessageContext) {
+  public async handleMessage(ctx: BaseMessageContext) {
     const args = ctx.message.split(" ");
     let command = args.shift();
     ctx.args = args;
@@ -31,7 +31,10 @@ export default class CommandHandler {
     }
     command = command.toLowerCase();
     if (command in this.commands) {
-      this.commands[command].run(ctx);
+      await this.commands[command].run(ctx);
+    }
+    if (!ctx.closed) {
+      ctx.close();
     }
   }
 }

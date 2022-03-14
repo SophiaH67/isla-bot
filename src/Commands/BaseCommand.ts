@@ -5,7 +5,7 @@ export default class BaseCommand {
   public aliases = ["example"];
 
   public async run(ctx: BaseMessageContext) {
-    ctx.reply("This is an example command");
+    await ctx.reply("This is an example command");
     ctx.close();
   }
 }

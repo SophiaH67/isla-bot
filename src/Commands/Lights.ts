@@ -20,7 +20,7 @@ export default class LightsCommand implements BaseCommand {
       : null;
 
     if (!targetState) {
-      ctx.reply("E-Error, I couldn't figure out the desired state");
+      await ctx.reply("E-Error, I couldn't figure out the desired state");
       return ctx.close();
     }
 
@@ -30,9 +30,9 @@ export default class LightsCommand implements BaseCommand {
         : await this.hass.turnOff(this.entity);
 
     if (res.status === 200) {
-      ctx.reply(`I turned ${targetState} the light`);
+      await ctx.reply(`I turned ${targetState} the light`);
     } else {
-      ctx.reply(`E-Error, I couldn't turn the light ${targetState}`);
+      await ctx.reply(`E-Error, I couldn't turn the light ${targetState}`);
     }
     return ctx.close();
   }

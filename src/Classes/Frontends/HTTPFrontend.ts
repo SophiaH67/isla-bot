@@ -25,7 +25,7 @@ export default class HTTPFrontend extends BaseFrontend {
           res.end();
         }
       );
-      this.commandHandler.handleMessage(ctx);
+      await this.commandHandler.handleMessage(ctx);
     });
   }
 

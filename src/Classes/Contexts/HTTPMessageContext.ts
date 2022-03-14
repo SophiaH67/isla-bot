@@ -1,6 +1,6 @@
 import BaseMessageContext from "./BaseMessageContext";
 
-export default class CLIMessageContext extends BaseMessageContext {
+export default class HTTPMessageContext extends BaseMessageContext {
   private bufferedMessage: string;
   private finishCallback: (message: string) => void;
 

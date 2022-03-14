@@ -10,13 +10,13 @@ export default class RemindmeCommand implements BaseCommand {
     const time = new TimeParser(ctx.message);
 
     if (!time.time) {
-      ctx.reply("E-Error, I couldn't figure out the time");
+      await ctx.reply("E-Error, I couldn't figure out the time");
       return ctx.close();
     }
 
-    ctx.reply(`I'll try to remember it in ${time.time}s`);
-    setTimeout(() => {
-      ctx.reply(`I remembered your message: \`\`\`${ctx.message}\`\`\``);
+    await ctx.reply(`I'll try to remember it in ${time.time}s`);
+    setTimeout(async () => {
+      await ctx.reply(`I remembered your message: \`\`\`${ctx.message}\`\`\``);
       ctx.close();
     }, time.time * 1000);
   }
