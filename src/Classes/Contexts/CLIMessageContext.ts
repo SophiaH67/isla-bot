@@ -16,7 +16,7 @@ export default class CLIMessageContext extends BaseMessageContext {
 
   close(): void {
     super.close();
-    console.log(this.bufferedMessage);
+    process.stdout.write(this.bufferedMessage);
     this.bufferedMessage = "";
     return;
   }

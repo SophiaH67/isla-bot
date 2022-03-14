@@ -14,10 +14,11 @@ export default class RemindmeCommand implements BaseCommand {
       return ctx.close();
     }
 
-    await ctx.reply(`I'll try to remember it in ${time.time}s`);
     setTimeout(async () => {
       await ctx.reply(`I remembered your message: \`\`\`${ctx.message}\`\`\``);
-      ctx.close();
     }, time.time * 1000);
+
+    await ctx.reply(`I'll try to remember it in ${time.time}s`);
+    ctx.close();
   }
 }
