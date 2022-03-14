@@ -2,12 +2,15 @@ import BaseFrontend from "./BaseFrontend";
 import Discord from "discord.js";
 import CommandHandler from "../CommandHandler";
 import MessageContext from "../../Classes/MessageContext";
+import assert from "assert";
 
 export default class DiscordFrontend extends BaseFrontend {
   private bot: Discord.Client;
   private token: string;
 
-  constructor(commandHandler: CommandHandler, token: string) {
+  constructor(commandHandler: CommandHandler, token?: string) {
+    assert(token, "Token is required");
+
     super(commandHandler);
     const intents = new Discord.Intents()
       .add(Discord.Intents.FLAGS.GUILDS)

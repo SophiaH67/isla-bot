@@ -5,10 +5,7 @@ import DiscordFrontend from "./Classes/Frontends/DiscordFrontend";
 const commandHandler = new CommandHandler();
 
 const frontends = [
-  new DiscordFrontend(
-    commandHandler,
-    "OTUyNTgyNDQ5NDM3NzY1NjMy.Yi4Hig.EeTbwTuW334Q9KMGS_Fbt9nBGk0"
-  ),
+  new DiscordFrontend(commandHandler, process.env.DISCORD_TOKEN),
   new CLIFrontend(commandHandler),
 ];
 
