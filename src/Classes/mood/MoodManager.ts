@@ -87,7 +87,7 @@ export default class MoodManager {
   }
 
   tick() {
-    this.exhaustion += this.sleeping ? -0.01 : 0.01;
+    this.exhaustion += this.sleeping ? -0.1 : 0.01;
 
     this.happiness += (Math.random() - (this.sleeping ? 0.2 : 0.5)) * 0.3;
     this.focus += (Math.random() - (this.sleeping ? 0.2 : 0.5)) * 0.3;
@@ -97,6 +97,8 @@ export default class MoodManager {
 
     if (this.exhaustion > 0.9) {
       this.sleeping = true;
+    } else if (this.exhaustion < 0.1) {
+      this.sleeping = false;
     }
 
     console.log(
