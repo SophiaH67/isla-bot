@@ -16,7 +16,7 @@ export default class CommandHandler {
         this.commands[commandInstance.name] = commandInstance;
         // Add aliases
         for (const alias of commandInstance.aliases) {
-          this.commands[alias] = commandInstance;
+          this.commands[alias.toLowerCase()] = commandInstance;
         }
       }
     }
@@ -24,11 +24,12 @@ export default class CommandHandler {
 
   public handleMessage(ctx: BaseMessageContext) {
     const args = ctx.message.split(" ");
-    const command = args.shift();
+    let command = args.shift();
     ctx.args = args;
     if (!command) {
       return;
     }
+    command = command.toLowerCase();
     if (command in this.commands) {
       this.commands[command].run(ctx);
     }
