@@ -1,8 +1,8 @@
 import BaseFrontend from "./BaseFrontend";
 import Discord from "discord.js";
 import CommandHandler from "../CommandHandler";
-import MessageContext from "../../Classes/MessageContext";
 import assert from "assert";
+import DiscordMessageContext from "../Contexts/DiscordMessageContext";
 
 export default class DiscordFrontend extends BaseFrontend {
   private bot: Discord.Client;
@@ -32,11 +32,7 @@ export default class DiscordFrontend extends BaseFrontend {
       console.log("Discord bot is ready!");
     });
     this.bot.on("messageCreate", (message) => {
-      const ctx = new MessageContext(
-        message.content,
-        message.author.id,
-        (reply) => message.channel.send(reply)
-      );
+      const ctx = new DiscordMessageContext(message);
       this.commandHandler.handleMessage(ctx);
     });
     this.bot.login(this.token);

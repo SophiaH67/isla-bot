@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import BaseCommand from "../Commands/BaseCommand";
-import MessageContext from "./MessageContext";
+import BaseMessageContext from "./Contexts/BaseMessageContext";
 
 export default class CommandHandler {
   private commands: { [key: string]: BaseCommand } = {};
@@ -22,9 +22,10 @@ export default class CommandHandler {
     }
   }
 
-  public handleMessage(ctx: MessageContext) {
+  public handleMessage(ctx: BaseMessageContext) {
     const args = ctx.message.split(" ");
     const command = args.shift();
+    ctx.args = args;
     if (!command) {
       return;
     }
