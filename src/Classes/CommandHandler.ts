@@ -33,8 +33,5 @@ export default class CommandHandler {
     if (command in this.commands) {
       await this.commands[command].run(ctx);
     }
-    if (!ctx.closed) {
-      ctx.close();
-    }
   }
 }
