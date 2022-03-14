@@ -1,0 +1,21 @@
+{
+  "name": "isla-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:ts": "tsc -w",
+    "dev:js": "nodemon dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "compromise": "^13.11.4",
+    "discord.js": "^13.6.0"
+  }
+}
