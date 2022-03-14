@@ -2,6 +2,7 @@ export default class BaseMessageContext {
   public message: string;
   public id: string;
   public args: string[] = [];
+  public closed: boolean = false;
 
   constructor(message: string, id: string) {
     this.message = message;
@@ -9,10 +10,12 @@ export default class BaseMessageContext {
   }
 
   async reply(_message: string): Promise<any> {
-    throw new Error("Method not implemented.");
+    if (this.closed) {
+      throw new Error("Context is closed");
+    }
   }
 
   close(): void {
-    throw new Error("Method not implemented.");
+    this.closed = true;
   }
 }

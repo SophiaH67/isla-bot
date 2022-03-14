@@ -15,11 +15,13 @@ export default class CLIMessageContext extends BaseMessageContext {
   }
 
   async reply(message: string): Promise<any> {
+    await super.reply(message);
     this.bufferedMessage += message + "\n";
     return;
   }
 
   close(): void {
+    super.close();
     this.finishCallback(this.bufferedMessage);
     this.bufferedMessage = "";
     return;

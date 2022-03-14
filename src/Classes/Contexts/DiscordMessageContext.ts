@@ -10,10 +10,12 @@ export default class DiscordMessageContext extends BaseMessageContext {
   }
 
   async reply(message: string): Promise<any> {
+    await super.reply(message);
     return this.discordMessage.reply(message);
   }
 
   close(): void {
+    super.close();
     // There is no need to close/flush the message
     return;
   }

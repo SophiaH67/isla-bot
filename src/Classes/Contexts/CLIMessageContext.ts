@@ -9,11 +9,13 @@ export default class CLIMessageContext extends BaseMessageContext {
   }
 
   async reply(message: string): Promise<any> {
+    await super.reply(message);
     this.bufferedMessage += message + "\n";
     return;
   }
 
   close(): void {
+    super.close();
     console.log(this.bufferedMessage);
     this.bufferedMessage = "";
     return;
