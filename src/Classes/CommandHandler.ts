@@ -32,6 +32,8 @@ export default class CommandHandler {
     command = command.toLowerCase();
     if (command in this.commands) {
       await this.commands[command].run(ctx);
+    } else {
+      ctx.close();
     }
   }
 }
