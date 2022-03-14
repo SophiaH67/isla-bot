@@ -21,6 +21,10 @@ export default class HTTPFrontend extends BaseFrontend {
         req.body.message,
         req.ip,
         (message: string) => {
+          if (!message) {
+            res.status(404).send("Command not found").end();
+            return;
+          }
           res.send(message);
           res.end();
         }
