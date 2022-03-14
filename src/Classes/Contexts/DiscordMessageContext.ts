@@ -9,8 +9,7 @@ export default class DiscordMessageContext extends BaseMessageContext {
     this.discordMessage = discordMessage;
   }
 
-  async reply(message: string): Promise<any> {
-    // No need to call the super.reply, since discord is always accepting messages
+  async _reply(message: string): Promise<any> {
     return this.discordMessage.reply(message);
   }
 

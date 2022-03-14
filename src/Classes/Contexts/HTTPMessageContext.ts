@@ -14,8 +14,7 @@ export default class HTTPMessageContext extends BaseMessageContext {
     this.finishCallback = finishCallback;
   }
 
-  async reply(message: string): Promise<any> {
-    await super.reply(message);
+  async _reply(message: string): Promise<any> {
     this.bufferedMessage += message + "\n";
     return;
   }

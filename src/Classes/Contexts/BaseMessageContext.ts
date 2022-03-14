@@ -1,10 +1,12 @@
 import { createClient } from "redis";
+import Isla from "../Isla";
 
 export default class BaseMessageContext {
   public message: string;
   public id: string;
   public args: string[] = [];
   public closed: boolean = false;
+  public isla: Isla = Isla.Instance;
   private client;
 
   constructor(message: string, id: string) {
@@ -23,10 +25,18 @@ export default class BaseMessageContext {
   }
 
   async reply(message: string): Promise<any> {
+    message = await this.isla.moodManager.transformMessage(message);
+
     if (this.closed) {
       // Dispatch it to the message queue instead
-      await this.client.rPush(`queued:${this.id}`, message);
+      return await this.client.rPush(`queued:${this.id}`, message);
     }
+    return await this._reply(message);
+  }
+
+  async _reply(_message: string): Promise<any> {
+    // Override this method
+    throw new Error("Method not implemented.");
   }
 
   close(): void {
