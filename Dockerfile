@@ -11,6 +11,6 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 RUN npm ci
-COPY --from=builder /app/dist/ .
+COPY --from=builder /app/dist .
 RUN ls -la > /dev/stderr
 CMD ["node", "."]
