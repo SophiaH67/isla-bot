@@ -1,6 +1,10 @@
 export default class TimeParser {
   public text = "";
   public time: number | undefined;
+  public matchedText: string;
+  get textWithoutTime() {
+    return this.text.replace(this.matchedText, "");
+  }
   private multiplierDict = {
     s: 1,
     sec: 1,
@@ -21,12 +25,13 @@ export default class TimeParser {
 
   constructor(text: string) {
     this.text = text;
+    this.matchedText = "";
     this.parse();
   }
 
   private parse() {
     const time = this.text.match(
-      /(\d+)\s*(s|sec|secs|seconds|m|min|mins|minutes|h|hr|hrs|hours|d|day|days)/
+      /(\d+)\s*(days|day|d|hours|hrs|hr|h|minutes|mins|min|m|seconds|secs|sec|s)/
     );
     if (!time || !(time[2] in this.multiplierDict)) {
       return;
@@ -34,5 +39,6 @@ export default class TimeParser {
 
     // @ts-ignore because we know it's a number
     this.time = parseInt(time[1], 10) * this.multiplierDict[time[2]];
+    this.matchedText = time[0];
   }
 }
