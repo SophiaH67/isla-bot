@@ -1,6 +1,7 @@
 import BaseMessageContext from "src/Classes/Contexts/BaseMessageContext";
 import BaseCommand from "./BaseCommand";
 import { OpenWeatherMapApi } from "node-ts-open-weather-map";
+import assert from "assert";
 
 interface WeatherResponse {
   coord: {
@@ -51,7 +52,7 @@ export default class WeatherCommand implements BaseCommand {
   public name = "weather";
   public aliases = ["tenki"];
 
-  private apiKey = "ad22edae22c1a73440e4e32be68ff984";
+  private apiKey = process.env.WEATHER_KEY || assert.fail("WEATHER_KEY");
   private openWeatherMapApi = new OpenWeatherMapApi({
     key: this.apiKey,
   });
