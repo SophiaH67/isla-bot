@@ -10,4 +10,8 @@ export default class BaseFrontend {
   public async start() {
     throw new Error("Not implemented");
   }
+
+  public async broadcast(_message: string) {
+    return;
+  }
 }

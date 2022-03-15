@@ -37,4 +37,16 @@ export default class DiscordFrontend extends BaseFrontend {
     });
     this.bot.login(this.token);
   }
+
+  public async broadcast(message: string) {
+    const channel = this.bot.channels.cache.get("952584213499093044");
+    if (!channel) {
+      throw new Error("Could not find broadcast channel");
+    }
+    if (channel.type !== "DM") {
+      throw new Error("Channel is not a text channel");
+    }
+    const dmChannel = channel as Discord.DMChannel;
+    await dmChannel.send(message);
+  }
 }

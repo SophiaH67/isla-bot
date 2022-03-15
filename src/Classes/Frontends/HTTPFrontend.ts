@@ -5,6 +5,7 @@ import HTTPMessageContext from "../Contexts/HTTPMessageContext";
 import CommandHandler from "../CommandHandler";
 
 export default class HTTPFrontend extends BaseFrontend {
+  private buffer: string[] = [];
   private port = 9123;
   private app: express.Application;
 
@@ -29,6 +30,7 @@ export default class HTTPFrontend extends BaseFrontend {
           res.end();
         }
       );
+      ctx.bufferedMessage = this.buffer.pop() || "";
       await this.commandHandler.handleMessage(ctx);
     });
   }
@@ -37,5 +39,9 @@ export default class HTTPFrontend extends BaseFrontend {
     this.app.listen(this.port, () => {
       console.log(`Listening on 0.0.0.0:${this.port}`);
     });
+  }
+
+  public async broadcast(message: string) {
+    this.buffer.push(message);
   }
 }

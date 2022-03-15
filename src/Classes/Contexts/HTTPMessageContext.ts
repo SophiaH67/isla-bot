@@ -1,7 +1,7 @@
 import BaseMessageContext from "./BaseMessageContext";
 
 export default class HTTPMessageContext extends BaseMessageContext {
-  private bufferedMessage: string;
+  public bufferedMessage: string;
   private finishCallback: (message: string) => void;
 
   constructor(

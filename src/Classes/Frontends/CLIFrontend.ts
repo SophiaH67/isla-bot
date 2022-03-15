@@ -11,4 +11,8 @@ export default class CLIFrontend extends BaseFrontend {
       this.commandHandler.handleMessage(ctx);
     }
   }
+
+  public async broadcast(message: string) {
+    console.log(`Broadcast: ${message}`);
+  }
 }
