@@ -33,6 +33,7 @@ export default class BaseMessageContext {
   }
 
   async reply(message: string): Promise<any> {
+    if (!message) throw new Error("Message cannot be empty");
     message = await this.isla.moodManager.transformMessage(message);
 
     if (this.closed) {
