@@ -39,7 +39,7 @@ export default class DiscordFrontend extends BaseFrontend {
   }
 
   public async broadcast(message: string) {
-    const channel = this.bot.channels.cache.get("952584213499093044");
+    const channel = await this.bot.channels.fetch("952584213499093044");
     if (!channel) {
       throw new Error("Could not find broadcast channel");
     }
