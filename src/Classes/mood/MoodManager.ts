@@ -83,7 +83,9 @@ export default class MoodManager {
   }
 
   public async transformMessage(message: string): Promise<string> {
-    return await this.moodTransformer.transform(message, this.mood);
+    return await (
+      await this.moodTransformer.transform(message, this.mood)
+    ).trim();
   }
 
   tick() {
@@ -127,5 +129,9 @@ export default class MoodManager {
   public wakeUp() {
     this.sleeping = false;
     //@TODO: increase exhaustion modifier by some amount
+  }
+
+  public get mooodIcon(): string {
+    return "https://cdn.discordapp.com/avatars/952582449437765632/909c5696487bcbd697eb8c468af48f5a.webp?";
   }
 }
