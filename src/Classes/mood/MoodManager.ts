@@ -123,4 +123,9 @@ export default class MoodManager {
 
     return Mood.Bored;
   }
+
+  public wakeUp() {
+    this.sleeping = false;
+    //@TODO: increase exhaustion modifier by some amount
+  }
 }
