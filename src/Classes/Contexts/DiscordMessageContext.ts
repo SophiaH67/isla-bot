@@ -18,4 +18,13 @@ export default class DiscordMessageContext extends BaseMessageContext {
     // There is no need to close/flush the message
     return;
   }
+
+  // Discord can never be closed
+  get closed(): boolean {
+    return false;
+  }
+
+  set closed(_: boolean) {
+    return;
+  }
 }
