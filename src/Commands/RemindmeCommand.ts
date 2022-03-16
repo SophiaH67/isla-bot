@@ -15,7 +15,7 @@ export default class RemindmeCommand implements BaseCommand {
     }
 
     setTimeout(async () => {
-      const text = `${time.matchedText} ago you asked to be reminded of "${time.textWithoutTime}"`;
+      const text = `Here's your reminder from ${time.matchedText} ago: ${time.textWithoutTime}`;
       const transformedText = await ctx.isla.moodManager.transformMessage(text);
       await ctx.isla.broadcast(transformedText);
     }, time.time * 1000);
