@@ -28,7 +28,7 @@ export default class MoodTransformer {
 
   async transformGeneric(prompt: string): Promise<string> {
     if (this.responseCache[prompt]) return this.responseCache[prompt];
-    const completion = await this.openAI.createCompletion("text-davinci-001", {
+    const completion = await this.openAI.createCompletion("text-davinci-002", {
       prompt,
       max_tokens: 64,
     });
