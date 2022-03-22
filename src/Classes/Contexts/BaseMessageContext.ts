@@ -1,4 +1,5 @@
 import { createClient } from "redis";
+import BaseFrontend from "../Frontends/BaseFrontend";
 import Isla from "../Isla";
 
 export default abstract class BaseMessageContext {
@@ -8,10 +9,13 @@ export default abstract class BaseMessageContext {
   private _closed: boolean = false;
   public isla: Isla = Isla.Instance;
   private client;
+  public command: string = "";
+  public frontend: BaseFrontend;
 
-  constructor(message: string, id: string) {
+  constructor(message: string, id: string, frontend: BaseFrontend) {
     this.message = message;
     this.id = id;
+    this.frontend = frontend;
     this.client = createClient();
   }
 

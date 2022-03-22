@@ -32,7 +32,7 @@ export default class DiscordFrontend extends BaseFrontend {
       console.log("Discord bot is ready!");
     });
     this.bot.on("messageCreate", (message) => {
-      const ctx = new DiscordMessageContext(message);
+      const ctx = new DiscordMessageContext(message, this);
       this.commandHandler.handleMessage(ctx);
     });
     this.bot.login(this.token);

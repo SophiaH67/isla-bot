@@ -1,11 +1,12 @@
 import { Message } from "discord.js";
+import BaseFrontend from "../Frontends/BaseFrontend";
 import BaseMessageContext from "./BaseMessageContext";
 
 export default class DiscordMessageContext extends BaseMessageContext {
   private discordMessage: Message;
 
-  constructor(discordMessage: Message) {
-    super(discordMessage.content, discordMessage.channelId);
+  constructor(discordMessage: Message, frontend: BaseFrontend) {
+    super(discordMessage.content, discordMessage.channelId, frontend);
     this.discordMessage = discordMessage;
   }
 

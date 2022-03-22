@@ -25,14 +25,11 @@ export default class CommandHandler {
   public async handleMessage(ctx: BaseMessageContext) {
     await ctx.init();
     const args = ctx.message.split(" ");
-    let command = args.shift();
+    ctx.command = args.shift() || "";
     ctx.args = args;
-    if (!command) {
-      command = "";
-    }
-    command = command.toLowerCase();
-    if (command in this.commands) {
-      await this.commands[command].run(ctx);
+    let searchCommand = ctx.command.toLowerCase();
+    if (searchCommand in this.commands) {
+      await this.commands[searchCommand].run(ctx);
     } else {
       ctx.close();
     }

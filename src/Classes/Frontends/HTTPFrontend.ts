@@ -21,6 +21,7 @@ export default class HTTPFrontend extends BaseFrontend {
       const ctx = new HTTPMessageContext(
         req.body.message,
         req.ip,
+        this,
         (message: string) => {
           if (!message) {
             res.status(404).send("Command not found").end();

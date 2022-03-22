@@ -1,10 +1,11 @@
+import BaseFrontend from "../Frontends/BaseFrontend";
 import BaseMessageContext from "./BaseMessageContext";
 
 export default class CLIMessageContext extends BaseMessageContext {
   private bufferedMessage: string;
 
-  constructor(message: string, id: string) {
-    super(message, id);
+  constructor(message: string, id: string, frontend: BaseFrontend) {
+    super(message, id, frontend);
     this.bufferedMessage = "";
   }
 

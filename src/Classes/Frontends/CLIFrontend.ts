@@ -7,7 +7,7 @@ export default class CLIFrontend extends BaseFrontend {
     prompt.start();
     while (true) {
       const { command } = await prompt.get(["command"]);
-      const ctx = new CLIMessageContext(command.toString(), "CLI");
+      const ctx = new CLIMessageContext(command.toString(), "CLI", this);
       this.commandHandler.handleMessage(ctx);
     }
   }

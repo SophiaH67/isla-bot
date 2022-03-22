@@ -1,3 +1,4 @@
+import BaseFrontend from "../Frontends/BaseFrontend";
 import BaseMessageContext from "./BaseMessageContext";
 
 export default class HTTPMessageContext extends BaseMessageContext {
@@ -7,9 +8,10 @@ export default class HTTPMessageContext extends BaseMessageContext {
   constructor(
     message: string,
     id: string,
+    frontend: BaseFrontend,
     finishCallback: (message: string) => void
   ) {
-    super(message, id);
+    super(message, id, frontend);
     this.bufferedMessage = "";
     this.finishCallback = finishCallback;
   }
