@@ -24,14 +24,26 @@ export default class CommandHandler {
 
   public async handleMessage(ctx: BaseMessageContext) {
     await ctx.init();
-    const args = ctx.message.split(" ");
-    ctx.command = args.shift() || "";
-    ctx.args = args;
-    let searchCommand = ctx.command.toLowerCase();
-    if (searchCommand in this.commands) {
-      await this.commands[searchCommand].run(ctx);
-    } else {
-      ctx.close();
+    let commandInstance: BaseCommand | undefined;
+    let commandName = "";
+    const searchMessage = ctx.message.toLowerCase().trim();
+
+    commandSearchLoop: for (const command in this.commands) {
+      for (const alias of [command, ...this.commands[command].aliases]) {
+        if (searchMessage.startsWith(alias)) {
+          commandInstance = this.commands[command];
+          commandName = ctx.message.substring(0, alias.length);
+          break commandSearchLoop;
+        }
+      }
     }
+
+    if (!commandInstance) {
+      return ctx.close();
+    }
+
+    ctx.command = commandName;
+    ctx.args = ctx.message.replace(ctx.command, "").trim().split(" ");
+    await commandInstance.run(ctx);
   }
 }
