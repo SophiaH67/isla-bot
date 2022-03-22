@@ -7,5 +7,6 @@ export default class EchoCommand implements BaseCommand {
 
   public async run(ctx: BaseMessageContext) {
     ctx.reply(ctx.args.join(" "));
+    ctx.close();
   }
 }
