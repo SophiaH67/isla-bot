@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 import Isla from "../Isla";
 
-export default class BaseMessageContext {
+export default abstract class BaseMessageContext {
   public message: string;
   public id: string;
   public args: string[] = [];
@@ -43,12 +43,9 @@ export default class BaseMessageContext {
     return await this._reply(message);
   }
 
-  async _reply(_message: string): Promise<any> {
-    // Override this method
-    throw new Error("Method not implemented.");
-  }
-
   close(): void {
     this.closed = true;
   }
+
+  public abstract _reply(message: string): Promise<any>;
 }
