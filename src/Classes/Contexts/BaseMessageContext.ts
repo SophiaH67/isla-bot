@@ -28,6 +28,7 @@ export default abstract class BaseMessageContext {
   }
 
   async init(): Promise<any> {
+    if (this.client.isOpen) return;
     await this.client.connect();
     const topMessage = await this.client.lPop(`queued:${this.id}`);
     if (topMessage) {
