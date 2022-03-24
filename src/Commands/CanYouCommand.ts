@@ -14,6 +14,7 @@ export default class CanYouCommand implements BaseCommand {
     "about",
     "the",
     "<@!952582449437765632>",
+    "just",
   ];
 
   public async run(ctx: BaseMessageContext) {
