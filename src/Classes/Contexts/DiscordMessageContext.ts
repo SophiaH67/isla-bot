@@ -11,7 +11,11 @@ export default class DiscordMessageContext extends BaseMessageContext {
   }
 
   async _reply(message: string): Promise<any> {
-    return this.discordMessage.reply(message);
+    return this.discordMessage.reply(message).catch((err) => {
+      if (err.code === 50013 || err.code === 50035) {
+        this.discordMessage.channel.send(message);
+      }
+    });
   }
 
   close(): void {
