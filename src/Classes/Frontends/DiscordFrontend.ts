@@ -39,14 +39,13 @@ export default class DiscordFrontend extends BaseFrontend {
   }
 
   public async broadcast(message: string) {
-    const channel = await this.bot.channels.fetch("952584213499093044");
+    const channel = await this.bot.channels.fetch("750038885404508180");
     if (!channel) {
       throw new Error("Could not find broadcast channel");
     }
-    if (channel.type !== "DM") {
+    if (channel.type !== "GUILD_TEXT") {
       throw new Error("Channel is not a text channel");
     }
-    const dmChannel = channel as Discord.DMChannel;
-    await dmChannel.send(message);
+    await channel.send(message);
   }
 }
