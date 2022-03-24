@@ -24,6 +24,7 @@ export default class CommandHandler {
 
   public async handleMessage(ctx: BaseMessageContext) {
     await ctx.init();
+
     let commandInstance: BaseCommand | undefined;
     let commandName = "";
     const searchMessage = ctx.message.toLowerCase().trim();
@@ -39,6 +40,11 @@ export default class CommandHandler {
     }
 
     if (!commandInstance) {
+      return ctx.close();
+    }
+
+    if (ctx.isla.moodManager.mood === "asleep") {
+      await ctx.reply("Zzzz...");
       return ctx.close();
     }
 
