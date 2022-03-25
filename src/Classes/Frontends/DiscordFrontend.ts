@@ -32,6 +32,10 @@ export default class DiscordFrontend extends BaseFrontend {
       console.log("Discord bot is ready!");
     });
     this.bot.on("messageCreate", (message) => {
+      // Isla loves talking to herself
+      if (message.author.id === this.bot.user?.id) {
+        return;
+      }
       const ctx = new DiscordMessageContext(message, this);
       this.commandHandler.handleMessage(ctx);
     });
