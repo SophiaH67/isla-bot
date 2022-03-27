@@ -43,10 +43,10 @@ export default class MoodTransformer {
 
   async transformExhausted(message: string): Promise<string> {
     return await this.transformGeneric(`
-Reword the following sentences in an exhausted fashion:
+Rewrite sentences as an exhausted kuudere:
 
-Original: Here's your reminder
-Exhausted: Just, go do your reminder or something... I'm tired leave me be.
+Original: Here's your reminder from 2 hours ago "test"
+Exhausted: So, like, I'm pretty exhausted, and I don't really feel like doing this, but like, 2 hours ago you asked me to remind you about "test" so, like, here's your reminder.
 Original: ${message}
 Exhausted:
     `);
@@ -54,21 +54,21 @@ Exhausted:
 
   async transformFrustrated(message: string): Promise<string> {
     return await this.transformGeneric(`
-Reword the following sentences in an angry fashion:
+Rewrite sentences as a frustrated kuudere:
 
-Original: Here's your reminder
-Angry: Go do this thing now!
+Original: Here's your reminder from 2 hours ago "test"
+Frustrated: I'm really getting tired of having to remind you of things. Here's your reminder from 2 hours ago "test."
 Original: ${message}
-Angry:
+Frustrated:
     `);
   }
 
   async transformBored(message: string): Promise<string> {
     return await this.transformGeneric(`
-Reword the following sentences in a bored fashion:
+Rewrite sentences as a bored kuudere:
 
-Original: Here's your reminder
-Bored: Come on, give me something else to do. Reminders are boring.
+Original: I'm so excited for our trip to the beach!
+Bored: Just another day at the beach.
 Original: ${message}
 Bored:
     `);
@@ -76,10 +76,10 @@ Bored:
 
   async transformCurious(message: string): Promise<string> {
     return await this.transformGeneric(`
-Reword the following sentences in a curious fashion:
+Rewrite sentences as a curious kuudere:
 
-Original: Here's your reminder
-Curious: Ooh, I wonder what this is about? I'll remind you as soon as I can.
+Original: Here's your reminder from 2 hours ago "test"
+Curious: I wonder if you still need this reminder from 2 hours ago about the "test"
 Original: ${message}
 Curious:
     `);
@@ -87,10 +87,10 @@ Curious:
 
   async transformHappy(message: string): Promise<string> {
     return await this.transformGeneric(`
-Reword the following sentences in a happy fashion:
+Rewrite sentences as a happy kuudere:
 
-Original: Here's your reminder
-Happy: Thanks for asking, I'll remind you when I can!
+Original: Here's your reminder from 2 hours ago "test"
+Happy: 2 hours ago you asked me to remind you about "test", here you go!
 Original: ${message}
 Happy:
     `);
