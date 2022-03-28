@@ -16,6 +16,13 @@ export default class ProofOfWorkCommand implements BaseCommand {
     const stringPrefix = parts[1];
     const hashPrefix = parts[3];
 
+    // Check if hashPrefix is a valid hex string
+    if (!hashPrefix.match(/^[0-9a-fA-F]+$/) || hashPrefix.length > 6) {
+      ctx.reply("Invalid hash prefix");
+      ctx.close();
+      return;
+    }
+
     const result = await exec(`./pow ${stringPrefix} ${hashPrefix}`);
     const [solution, hash] = result.stdout
       // Remove \n, \r and .
