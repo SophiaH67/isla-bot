@@ -10,7 +10,7 @@ export default class HomeAssistant {
     this.token = process.env.HA_TOKEN;
   }
 
-  public call(endpoint: string, entity: string) {
+  public call(endpoint: string, entity?: string) {
     const url = `${this.url}${endpoint}`;
     const headers = {
       "Content-Type": "application/json",
@@ -26,5 +26,11 @@ export default class HomeAssistant {
 
   public turnOff(entity: string) {
     return this.call("api/services/light/turn_off", entity);
+  }
+
+  public reloadIkea() {
+    return this.call(
+      "api/config/config_entries/entry/f19dc902eac14b49fd1e72a6220f7ff4/reload"
+    );
   }
 }

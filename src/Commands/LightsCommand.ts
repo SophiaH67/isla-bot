@@ -24,6 +24,8 @@ export default class LightsCommand implements BaseCommand {
       return ctx.close();
     }
 
+    await this.hass.reloadIkea();
+
     const res =
       targetState === "on"
         ? await this.hass.turnOn(this.entity)
