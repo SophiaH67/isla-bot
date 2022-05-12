@@ -52,4 +52,9 @@ export default class Isla extends ErisClient {
       this.frontends.map((frontend) => frontend.broadcast(message))
     );
   }
+
+  public async onReady(): Promise<void> {
+    this.loadCommands(__dirname + "/../Commands");
+    super.onReady();
+  }
 }
