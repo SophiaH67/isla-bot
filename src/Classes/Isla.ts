@@ -13,6 +13,13 @@ export default class Isla extends ErisClient {
     return "Shikimori";
   }
 
+  public async transformMessage(message?: string) {
+    if (!message) {
+      return undefined;
+    }
+    return await this.moodManager.transformMessage(message);
+  }
+
   private constructor() {
     super(
       new Client({
