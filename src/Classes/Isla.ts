@@ -1,3 +1,4 @@
+import assert from "assert";
 import { Client, Intents } from "discord.js";
 import { ErisClient } from "eris-boreas";
 import BaseFrontend from "./Frontends/BaseFrontend";
@@ -10,7 +11,7 @@ export default class Isla extends ErisClient {
   public moodManager: MoodManager;
 
   get name() {
-    return "Shikimori";
+    return "Isla";
   }
 
   public async transformMessage(message?: string) {
@@ -38,6 +39,8 @@ export default class Isla extends ErisClient {
       })
     );
     this.moodManager = new MoodManager(this);
+    assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
+    this.bot.login(process.env.DISCORD_TOKEN);
   }
 
   public static get Instance() {
