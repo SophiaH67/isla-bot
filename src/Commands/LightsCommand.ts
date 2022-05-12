@@ -1,16 +1,20 @@
-import BaseMessageContext from "src/Classes/Contexts/BaseMessageContext";
-import BaseCommand from "./BaseCommand";
+import Command from "eris-boreas/lib/src/conversation/Command";
+import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import HomeAssistant from "../Classes/Utils/HomeAssistant";
 
-export default class LightsCommand implements BaseCommand {
-  public name = "lights";
-  public aliases = ["turnon", "turnoff", "turn"];
+export default class LightsCommand implements Command {
+  public aliases = ["lights", "turnon", "turnoff", "turn"];
+  public description = "Turns the light on or off";
+  public usage = "lights <on/off>";
 
   private entity = "light.marnix_bulb";
   private hass = new HomeAssistant();
 
-  public async run(ctx: BaseMessageContext) {
-    const words = ctx.message.split(" ").map((word) => word.toLowerCase());
+  public async run(
+    _conversation: Conversation,
+    args: string[]
+  ): Promise<string> {
+    const words = args.map((word) => word.toLowerCase());
 
     // Can be either on or off
     const targetState = words.includes("on")
@@ -20,8 +24,7 @@ export default class LightsCommand implements BaseCommand {
       : null;
 
     if (!targetState) {
-      await ctx.reply("E-Error, I couldn't figure out the desired state");
-      return ctx.close();
+      return "Error, I couldn't figure out the desired state";
     }
 
     await this.hass.reloadIkea();
@@ -32,10 +35,9 @@ export default class LightsCommand implements BaseCommand {
         : await this.hass.turnOff(this.entity);
 
     if (res.status === 200) {
-      await ctx.reply(`I turned ${targetState} the light`);
+      return `The light is now ${targetState}`;
     } else {
-      await ctx.reply(`E-Error, I couldn't turn the light ${targetState}`);
+      return `Error, I couldn't turn the light ${targetState}`;
     }
-    return ctx.close();
   }
 }

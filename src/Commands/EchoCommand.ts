@@ -1,12 +1,15 @@
-import BaseMessageContext from "src/Classes/Contexts/BaseMessageContext";
-import BaseCommand from "./BaseCommand";
+import Command from "eris-boreas/lib/src/conversation/Command";
+import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 
-export default class EchoCommand implements BaseCommand {
-  public name = "echo";
-  public aliases = [];
+export default class EchoCommand implements Command {
+  public aliases = ["echo"];
+  public description = "Echoes the given text";
+  public usage = "echo <text>";
 
-  public async run(ctx: BaseMessageContext) {
-    ctx.reply(ctx.args.join(" "));
-    ctx.close();
+  public async run(
+    _conversation: Conversation,
+    args: string[]
+  ): Promise<string> {
+    return args.slice(1).join(" ");
   }
 }

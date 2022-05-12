@@ -1,17 +1,22 @@
-import BaseMessageContext from "src/Classes/Contexts/BaseMessageContext";
-import BaseCommand from "./BaseCommand";
+import Command from "eris-boreas/lib/src/conversation/Command";
+import Conversation from "eris-boreas/lib/src/conversation/Conversation";
+import Isla from "src/Classes/Isla";
 
-export default class WakeUpCommand implements BaseCommand {
-  public name = "wake";
-  public aliases = ["wakeup"];
+export default class WakeUpCommand implements Command {
+  public aliases = ["wake", "wakeup"];
+  public description = "Attempts to wake me up";
+  public usage = "wake up";
 
-  public async run(ctx: BaseMessageContext) {
-    if (ctx.isla.moodManager.sleeping) {
-      ctx.isla.moodManager.wakeUp();
-      await ctx.reply("What is it that made you wake me up?");
+  public async run(
+    conversation: Conversation,
+    _args: string[]
+  ): Promise<string> {
+    const isla = conversation.eris as Isla;
+    if (isla.moodManager.sleeping) {
+      isla.moodManager.wakeUp();
+      return "Why did you wake me up?";
     } else {
-      await ctx.reply("I'm already awake!");
+      return "I'm already awake!";
     }
-    ctx.close();
   }
 }
