@@ -25,10 +25,8 @@ export default class CanYouCommand implements Command {
   ): Promise<string | undefined> {
     // Create a new message with the first argument removed
     // while putting quotes around each element
-    const newMessage = args
-      .slice(1)
-      .map((arg) => `"${arg}"`)
-      .join(" ");
+    const newMessage = args.slice(1).join(" ");
+    console.log(`New message: ${newMessage}`);
 
     return await conversation.eris.directiveHandler.handleDirective(
       conversation,
