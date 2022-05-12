@@ -1,12 +1,18 @@
-import BaseMessageContext from "src/Classes/Contexts/BaseMessageContext";
-import BaseCommand from "./BaseCommand";
+import Command from "eris-boreas/lib/src/conversation/Command";
+import Conversation from "eris-boreas/lib/src/conversation/Conversation";
+import Isla from "src/Classes/Isla";
 
-export default class MoodCommand implements BaseCommand {
-  public name = "mood";
-  public aliases = [];
+export default class MoodCommand implements Command {
+  public aliases = ["mood"];
+  public description = "Shows my mood";
+  public usage = "mood";
 
-  public async run(ctx: BaseMessageContext) {
-    await ctx._reply(ctx.isla.moodManager.mood);
-    ctx.close();
+  public async run(
+    conversation: Conversation,
+    _args: string[]
+  ): Promise<string> {
+    return `I'm currently feeling ${
+      (conversation.eris as Isla).moodManager.mood
+    }`;
   }
 }

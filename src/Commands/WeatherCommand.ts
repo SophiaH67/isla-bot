@@ -1,7 +1,7 @@
-import BaseMessageContext from "src/Classes/Contexts/BaseMessageContext";
-import BaseCommand from "./BaseCommand";
 import { OpenWeatherMapApi } from "node-ts-open-weather-map";
 import assert from "assert";
+import Command from "eris-boreas/lib/src/conversation/Command";
+import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 
 interface WeatherResponse {
   coord: {
@@ -48,9 +48,10 @@ interface WeatherResponse {
   cod: number;
 }
 
-export default class WeatherCommand implements BaseCommand {
-  public name = "weather";
-  public aliases = ["tenki"];
+export default class WeatherCommand implements Command {
+  public aliases = ["weather", "tenki"];
+  public description = "Shows the weather";
+  public usage = "weather";
 
   private apiKey = process.env.WEATHER_KEY || assert.fail("WEATHER_KEY");
   private openWeatherMapApi = new OpenWeatherMapApi({
@@ -68,15 +69,14 @@ export default class WeatherCommand implements BaseCommand {
     }
   }
 
-  public async run(ctx: BaseMessageContext) {
+  public async run(
+    _conversation: Conversation,
+    _args: string[]
+  ): Promise<string> {
     const weather = await this.getWeather();
     if (!weather) {
-      ctx.reply("E-Error, I couldn't get the weather");
-      return ctx.close();
+      throw new Error("Could not get weather");
     }
-    ctx.reply(
-      `It's currently ${weather.main.temp}°C in ${weather.name} with wind speeds reaching ${weather.wind.speed}m/s. The weather is ${weather.weather[0].description}`
-    );
-    return ctx.close();
+    return `It's currently ${weather.main.temp}°C in ${weather.name}. Winds are ${weather.wind.speed}m/s. Overall, the weather is ${weather.weather[0].description}.`;
   }
 }
