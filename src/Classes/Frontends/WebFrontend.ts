@@ -34,7 +34,7 @@ export default class WebFrontend extends BaseFrontend {
   }
 
   public async broadcast(message: string) {
-    this.io.emit("broadcast", message);
+    this.io.sockets.emit("broadcast", message);
   }
 
   async start() {
