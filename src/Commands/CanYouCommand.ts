@@ -13,6 +13,7 @@ export default class CanYouCommand implements Command {
     "me",
     "about",
     "the",
+    "give",
     "<@!952582449437765632>",
     "just",
   ];
