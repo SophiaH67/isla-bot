@@ -9,5 +9,5 @@ const frontends: BaseFrontend[] = [];
 Isla.Instance.frontends = frontends;
 
 frontends.push(new DiscordFrontend(Isla.Instance));
-frontends.push(new CLIFrontend());
+frontends.push(new CLIFrontend(Isla.Instance));
 frontends.push(new JoinFrontend());

@@ -102,10 +102,6 @@ export default class MoodManager {
     } else if (this.exhaustion < 0.1) {
       this.sleeping = false;
     }
-
-    console.log(
-      `Mood: ${this.mood} | Exhaustion: ${this.exhaustion} | Frustration: ${this.frustration} | Curiosity: ${this.curiosity} | Happiness: ${this.happiness} | Focus: ${this.focus}`
-    );
   }
 
   calculateMood() {

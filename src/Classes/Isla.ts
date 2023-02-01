@@ -55,6 +55,7 @@ export default class Isla extends ErisClient {
 
   public async onReady(): Promise<void> {
     this.loadCommands(__dirname + "/../Commands");
+    this.frontends.forEach((frontend) => frontend.start());
     super.onReady();
   }
 }
