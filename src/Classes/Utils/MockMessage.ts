@@ -2,16 +2,24 @@ import { Message } from "discord.js";
 import ErisMessage from "eris-boreas/lib/src/interfaces/ErisMessage";
 import Isla from "../Isla";
 
-const mockSend = (content: string) =>
-  //@ts-expect-error - For some reason, the message content is in a property called options
-  console.log(`[MockMessage] ${content.options.content}`);
+// const mockSend = (content: string) =>
+//   //@ts-expect-error - For some reason, the message content is in a property called options
+//   console.log(`[MockMessage] ${content.options.content}`);
 
 //@ts-expect-error - Mocking a class partially. If it breaks I'll add new methods.
 export default class MockMessage extends Message implements ErisMessage {
   public eris: Isla;
 
-  constructor(isla: Isla, content: string) {
+  constructor(
+    isla: Isla,
+    content: string,
+    _mockSend: (content: string) => void
+  ) {
     if (!isla.bot.user) throw new Error("Bot user not found");
+
+    function mockSend(weirdObject: { options: { content: string } }) {
+      _mockSend(weirdObject.options.content);
+    }
 
     super(isla.bot, {
       attachments: [],
@@ -45,6 +53,7 @@ export default class MockMessage extends Message implements ErisMessage {
         },
       });
     }
+
     //@ts-expect-error - we are overriding the send method
     this.send = mockSend;
   }

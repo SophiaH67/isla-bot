@@ -24,7 +24,9 @@ export default class CLIFrontend extends BaseFrontend {
       if (answer === "quit") {
         break;
       }
-      const message = new MockMessage(this.isla, answer);
+      const message = new MockMessage(this.isla, answer, (content) =>
+        console.log(`[BOT] ${content}`)
+      );
       await this.isla.onMessage(message);
     }
   }
