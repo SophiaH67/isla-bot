@@ -23,7 +23,7 @@ interface SocketData {
   age: number;
 }
 
-export default class WebFrontend extends BaseFrontend {
+export default class WebsocketFrontend extends BaseFrontend {
   private io!: Server<
     ClientToServerEvents,
     ServerToClientEvents,
