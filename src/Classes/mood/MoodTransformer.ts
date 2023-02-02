@@ -1,4 +1,3 @@
-import MoodManager from "./MoodManager";
 import { Configuration, OpenAIApi } from "openai";
 import Mood from "./Moods";
 
@@ -7,13 +6,7 @@ export default class MoodTransformer {
     apiKey: process.env.OPENAI_SECRET_KEY,
   });
   private openAI: OpenAIApi = new OpenAIApi(this.config);
-  //@ts-ignore
-  private moodManager: MoodManager;
   private responseCache: { [key: string]: string } = {};
-
-  constructor(moodManager: MoodManager) {
-    this.moodManager = moodManager;
-  }
 
   public async transform(message: string, mood: Mood): Promise<string> {
     if (mood === Mood.Asleep) return "Zzz...";

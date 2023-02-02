@@ -76,7 +76,7 @@ export default class MoodManager {
 
   constructor(isla: Isla) {
     this.isla = isla;
-    this.moodTransformer = new MoodTransformer(this);
+    this.moodTransformer = new MoodTransformer();
 
     this.tick();
     setInterval(() => this.tick(), this.tickDelay);

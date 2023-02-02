@@ -16,6 +16,9 @@ export default class CanYouCommand implements Command {
     "give",
     "<@!952582449437765632>",
     "just",
+    "set",
+    "to",
+    "change",
   ];
   public description = "Replaces words to find a matching command";
   public usage = "can you <command>";

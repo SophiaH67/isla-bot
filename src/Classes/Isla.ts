@@ -3,18 +3,22 @@ import { Client, Intents } from "discord.js";
 import { ErisClient } from "eris-boreas";
 import BaseFrontend from "./Frontends/BaseFrontend";
 import MoodManager from "./mood/MoodManager";
+import ProtocolManager from "./protocol/ProtocolManager";
 
 export default class Isla extends ErisClient {
   private static _instance: Isla;
 
   public frontends: BaseFrontend[] = [];
   public moodManager: MoodManager;
+  public protocolManager: ProtocolManager;
 
   get name() {
     return "Isla";
   }
 
-  public async transformMessage(message?: string) {
+  public async transformMessage(message: string): Promise<string>;
+  public async transformMessage(message: undefined): Promise<undefined>;
+  public async transformMessage(message: string | undefined) {
     if (!message) {
       return undefined;
     }
@@ -39,6 +43,8 @@ export default class Isla extends ErisClient {
       })
     );
     this.moodManager = new MoodManager(this);
+    this.protocolManager = new ProtocolManager(this);
+
     assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
     this.bot.login(process.env.DISCORD_TOKEN);
   }

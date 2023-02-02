@@ -3,9 +3,11 @@ import { Server } from "socket.io";
 import Isla from "../Isla";
 import MockMessage from "../Utils/MockMessage";
 import { createServer } from "http";
+import Protocol from "../protocol/Protocol";
 
 interface ServerToClientEvents {
   broadcast: (message: string) => void;
+  protocolChange: (protocol: Protocol) => void;
 }
 
 interface ClientToServerEvents {
@@ -56,5 +58,9 @@ export default class WebFrontend extends BaseFrontend {
         await this.isla.onMessage(message);
       });
     });
+  }
+
+  public async setProtocol(protocol: Protocol) {
+    this.io.sockets.emit("protocolChange", protocol);
   }
 }
