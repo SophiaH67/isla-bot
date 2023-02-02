@@ -16,5 +16,10 @@ async fn main() {
         .unwrap();
 
     let body = res.text().await.unwrap();
+
+    if body.is_empty() {
+        std::process::exit(1);
+    }
+
     println!("{}", body);
 }
