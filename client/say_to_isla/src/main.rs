@@ -7,7 +7,7 @@ async fn main() {
 
     let client = reqwest::Client::new();
     let res = client
-        .post("http://localhost:1515/command")
+        .post("https://isla.marnixah.com/command")
         .body(args.join(" "))
         .header("Content-Type", "text/plain")
         .timeout(std::time::Duration::from_secs(10))
