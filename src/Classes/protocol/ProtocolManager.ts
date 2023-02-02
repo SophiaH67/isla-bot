@@ -15,7 +15,7 @@ export default class ProtocolManager {
     this._protocol = protocol;
 
     const transformedMessage = await this.isla.transformMessage(
-      `Protocol set to '${protocol}'`
+      `Protocol has been set to '${protocol}' mode.`
     );
 
     this.isla.broadcast(transformedMessage);

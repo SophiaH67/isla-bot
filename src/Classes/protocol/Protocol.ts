@@ -1,7 +1,7 @@
-enum Protocol {
-  Standard = "standard",
-  Safety = "safety",
-  Emergency = "emergency",
+enum  Protocol {
+  Standard = "standard", // Normal
+  Safety = "safety", // Anx
+  Emergency = "emergency", // Life danger
 }
 
 export default Protocol;

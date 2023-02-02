@@ -13,9 +13,17 @@ export default class MockMessage extends Message implements ErisMessage {
   ) {
     if (!isla.bot.user) throw new Error("Bot user not found");
 
-    function mockSend(weirdObject: { options: { content: string } }) {
-      _mockSend(weirdObject.options.content);
-    }
+    const mockSend = (
+      weirdObject: { options: { content: string } } | string
+    ) => {
+      _mockSend(
+        typeof weirdObject === "string"
+          ? weirdObject
+          : weirdObject.options.content
+      );
+
+      return Promise.resolve(this);
+    };
 
     super(isla.bot, {
       attachments: [],
@@ -52,5 +60,7 @@ export default class MockMessage extends Message implements ErisMessage {
 
     //@ts-expect-error - we are overriding the send method
     this.send = mockSend;
+    //@ts-expect-error - we are overriding the reply method
+    this.reply = mockSend;
   }
 }
