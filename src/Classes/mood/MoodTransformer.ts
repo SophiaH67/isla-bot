@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
+import ExpiringCache from "../Utils/ExpiringCache";
 import Mood from "./Moods";
 
 export default class MoodTransformer {
@@ -6,7 +7,7 @@ export default class MoodTransformer {
     apiKey: process.env.OPENAI_SECRET_KEY,
   });
   private openAI: OpenAIApi = new OpenAIApi(this.config);
-  private responseCache: { [key: string]: string } = {};
+  private responseCache = new ExpiringCache<string>(30_000);
 
   public async transform(message: string, mood: Mood): Promise<string> {
     if (mood === Mood.Asleep) return "Zzz...";
@@ -20,7 +21,8 @@ export default class MoodTransformer {
   }
 
   async transformGeneric(prompt: string): Promise<string> {
-    if (this.responseCache[prompt]) return this.responseCache[prompt];
+    const cached = this.responseCache.get(prompt);
+    if (cached) return cached;
     const completion = await this.openAI.createCompletion("text-davinci-002", {
       prompt,
       max_tokens: 64,
@@ -30,7 +32,7 @@ export default class MoodTransformer {
     }
     const choice =
       completion.data.choices[0].text || "I'm sorry, I don't understand.";
-    this.responseCache[prompt] = choice;
+    this.responseCache.set(prompt, choice);
     return choice;
   }
 
