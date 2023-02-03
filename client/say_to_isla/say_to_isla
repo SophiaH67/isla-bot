@@ -1,0 +1,20 @@
+#!/bin/bash
+
+text="$@"
+
+if [ -z "$text" ]; then
+  echo "Usage: say_to_isla <text>"
+  exit 1
+fi
+
+tmpfile=$(mktemp)
+
+stdbuf -oL curl -s -X POST -H "Content-Type: text/plain" -d "$text" https://isla.marnixah.com/command | tee "$tmpfile"
+
+# If response is empty, exit with 1
+if [ ! -s "$tmpfile" ]; then
+  exit 1
+else
+  echo # Add newline
+  exit 0
+fi
