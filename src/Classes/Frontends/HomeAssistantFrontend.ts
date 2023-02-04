@@ -26,5 +26,7 @@ export default class HomeAssistantFrontend extends BaseFrontend {
         await this.hass.activateScene("scene.marnix_emergency");
         break;
     }
+
+    await this.broadcast(`Protocol has been set to ${protocol}`);
   }
 }
