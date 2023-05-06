@@ -1,30 +1,39 @@
 import Command from "eris-boreas/lib/src/conversation/Command";
 import Conversation from "eris-boreas/lib/src/conversation/Conversation";
-import Isla from "src/Classes/Isla";
-import TimeParser from "../Classes/Utils/TimeParser";
+import { TodoistApi } from "@doist/todoist-api-typescript";
+import assert from "assert";
 
 export default class RemindmeCommand implements Command {
   public aliases = ["remindme", "remind"];
-  public description = "Reminds you of something in the future";
-  public usage = "remindme <time> <text>";
+  public description = "Adds a todoist reminder";
+  public usage = "remindme <...text>";
+  private firstTokensToRemove = ["me", "to"];
+
+  private todoist: TodoistApi = new TodoistApi(
+    process.env.TODOIST_TOKEN || assert.fail("TODOIST_TOKEN not set")
+  );
 
   public async run(
-    conversation: Conversation,
+    _conversation: Conversation,
     args: string[]
   ): Promise<string> {
-    const time = new TimeParser(args.join(" "));
+    let text = args.slice(1);
 
-    if (!time.time) {
-      throw new Error("E-Error, I couldn't figure out the time");
+    // Remove the first tokens
+    for (const textBit of text) {
+      if (this.firstTokensToRemove.includes(textBit.toLowerCase())) {
+        text = text.slice(1);
+      } else {
+        break;
+      }
     }
 
-    setTimeout(async () => {
-      const text = `Here's your reminder from ${time.matchedText} ago "${time.textWithoutTime}"`;
-      const transformedText = await (
-        conversation.eris as Isla
-      ).moodManager.transformMessage(text);
-      await (conversation.eris as Isla).broadcast(transformedText);
-    }, time.time * 1000);
-    return `I'll remind you about "${time.textWithoutTime}" in ${time.matchedText}`;
+    const reminder = await this.todoist.addTask({
+      content: text.join(" "),
+    });
+
+    const project = await this.todoist.getProject(reminder.projectId);
+
+    return `I've added a reminder to ${project.name} for "${reminder.content}"`;
   }
 }
