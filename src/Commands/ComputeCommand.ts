@@ -13,7 +13,7 @@ export default class ComputeCommand extends Command {
   private openAI: OpenAIApi = new OpenAIApi(this.config);
 
   public async run(
-    _conversation: Conversation,
+    conversation: Conversation,
     args: string[]
   ): Promise<string> {
     const completion = await this.openAI.createCompletion("text-davinci-002", {
@@ -27,10 +27,10 @@ export default class ComputeCommand extends Command {
 
     const choice = completion.data.choices[0].text.trim();
 
-    await _conversation.reference.reply({
+    await conversation.reference.reply({
       content: choice,
     });
 
-    return ""; // Skip the middleware
+    return ""; // Skip the reply middleware
   }
 }
