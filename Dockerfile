@@ -1,5 +1,6 @@
-FROM node:19 as builder
+FROM node:19-alpine as builder
 WORKDIR /app
+RUN apk add --no-cache docker
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
