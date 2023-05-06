@@ -55,7 +55,7 @@ export default class ShellCommand implements Command {
   public usage = "shell <command>";
   public aliases = ["shell ", "sh ", "!", "eval "];
 
-  private allowedUsers = ["123", "178210163369574401", "231446107794702336"];
+  private allowedUsers = ["178210163369574401", "231446107794702336"];
 
   public run(conversation: Conversation, args: string[]): Promise<string> {
     if (!this.allowedUsers.includes(conversation.messages[0].author.id)) {
