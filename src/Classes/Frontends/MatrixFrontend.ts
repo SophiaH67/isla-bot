@@ -18,8 +18,9 @@ import { getImageFromMood } from "../Utils/moodToImage";
 export default class MatrixFrontend extends BaseFrontend {
   private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
   private crypto = new RustSdkCryptoStorageProvider("data/crypto");
-
   private client: MatrixClient | undefined;
+
+  private currentMoodProfile: Mood = Mood.Frustrated;
 
   constructor(private readonly isla: Isla) {
     super();
@@ -71,6 +72,8 @@ export default class MatrixFrontend extends BaseFrontend {
   }
 
   public async handleMessage(roomId: string, event: MatrixChatEvent) {
+    if (this.isla.moodManager.mood !== this.currentMoodProfile)
+      await this.updateProfileToMatchMood();
     const reply = (message: string) => {
       this.client?.sendNotice?.(roomId, message);
     };
@@ -156,9 +159,10 @@ export default class MatrixFrontend extends BaseFrontend {
 
     return newMatrixFile;
   }
-  public async onMoodChange(mood: Mood): Promise<void> {
+
+  private async updateProfileToMatchMood() {
     if (!this.client) return;
-    const pfp = getImageFromMood(mood);
+    const pfp = getImageFromMood(this.isla.moodManager.mood);
 
     const matrixUpload = await this.uploadFileCached(pfp);
 
