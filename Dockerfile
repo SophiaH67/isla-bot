@@ -4,7 +4,7 @@ RUN apt update -y && apt install -y docker
 # Install exactly glibc-2.29
 RUN wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz && \
     tar -zxvf glibc-2.29.tar.gz && \
-    glibc-2.29 && \
+    cd glibc-2.29 && \
     mkdir build_dir && \
     cd build_dir && \
     ../configure --prefix=/opt/glibc && \
