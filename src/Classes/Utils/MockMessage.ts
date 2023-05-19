@@ -2,8 +2,11 @@ import { Message } from "discord.js";
 import ErisMessage from "eris-boreas/lib/src/interfaces/ErisMessage";
 import Isla from "../Isla";
 
-//@ts-expect-error - Mocking a class partially. If it breaks I'll add new methods.
-export default class MockMessage extends Message implements ErisMessage {
+export default class MockMessage
+  //@ts-expect-error - Constructor is private :/
+  extends Message
+  implements Partial<ErisMessage>
+{
   public eris: Isla;
 
   constructor(

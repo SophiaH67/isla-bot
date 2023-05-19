@@ -1,6 +1,8 @@
 import BaseFrontend from "./BaseFrontend";
 import Isla from "../Isla";
 import Protocol from "../protocol/Protocol";
+import Mood from "../mood/Moods";
+import { getImageFromMood } from "../Utils/moodToImage";
 
 export default class DiscordFrontend extends BaseFrontend {
   constructor(public isla: Isla) {
@@ -41,5 +43,9 @@ export default class DiscordFrontend extends BaseFrontend {
         });
         break;
     }
+  }
+
+  public async onMoodChange(mood: Mood): Promise<void> {
+    await this.isla.bot.user?.setAvatar?.(getImageFromMood(mood));
   }
 }

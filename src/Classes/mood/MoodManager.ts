@@ -7,6 +7,8 @@ export default class MoodManager {
   public isla: Isla;
   public moodTransformer: MoodTransformer;
 
+  public lastMood: Mood = Mood.Happy;
+
   // Actual mood factors
   public sleeping = false;
   public _exhaustion = 0;
@@ -83,9 +85,7 @@ export default class MoodManager {
   }
 
   public async transformMessage(message: string): Promise<string> {
-    return await (
-      await this.moodTransformer.transform(message, this.mood)
-    ).trim();
+    return (await this.moodTransformer.transform(message, this.mood)).trim();
   }
 
   tick() {
@@ -102,6 +102,12 @@ export default class MoodManager {
     } else if (this.exhaustion < 0.1) {
       this.sleeping = false;
     }
+
+    const currentMood = this.mood;
+    if (this.lastMood !== currentMood)
+      this.isla.frontends.map((frontend) => frontend.onMoodChange(currentMood));
+
+    this.lastMood = currentMood;
   }
 
   calculateMood() {
@@ -113,6 +119,8 @@ export default class MoodManager {
   }
 
   public get mood(): Mood {
+    return Math.random() > 0.5 ? Mood.Frustrated : Mood.Bored;
+
     if (this.sleeping) return Mood.Asleep;
     if (this.exhausted) return Mood.Exhausted;
     if (this.frustrated) return Mood.Frustrated;
@@ -125,9 +133,5 @@ export default class MoodManager {
   public wakeUp() {
     this.sleeping = false;
     //@TODO: increase exhaustion modifier by some amount
-  }
-
-  public get mooodIcon(): string {
-    return "https://cdn.discordapp.com/avatars/952582449437765632/909c5696487bcbd697eb8c468af48f5a.webp?";
   }
 }

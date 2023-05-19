@@ -4,6 +4,7 @@ import DiscordFrontend from "./Classes/Frontends/DiscordFrontend";
 import HomeAssistantFrontend from "./Classes/Frontends/HomeAssistantFrontend";
 import HttpFrontend from "./Classes/Frontends/HttpFrontend";
 import JoinFrontend from "./Classes/Frontends/JoinFrontend";
+import MatrixFrontend from "./Classes/Frontends/MatrixFrontend";
 import WebsocketFrontend from "./Classes/Frontends/WebsocketFrontend";
 import Isla from "./Classes/Isla";
 
@@ -17,3 +18,4 @@ frontends.push(new JoinFrontend());
 frontends.push(new WebsocketFrontend(Isla.Instance));
 frontends.push(new HttpFrontend(Isla.Instance));
 frontends.push(new HomeAssistantFrontend());
+frontends.push(new MatrixFrontend(Isla.Instance));

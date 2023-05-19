@@ -73,7 +73,7 @@ export default class Join {
         "I have a message for you"
       ),
       text,
-      icon: this.isla.moodManager.mooodIcon,
+      icon: "https://cdn.discordapp.com/avatars/952582449437765632/909c5696487bcbd697eb8c468af48f5a.webp?",
       deviceId: "group.all",
     });
     return response;
