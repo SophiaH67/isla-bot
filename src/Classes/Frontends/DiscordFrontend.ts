@@ -46,6 +46,10 @@ export default class DiscordFrontend extends BaseFrontend {
   }
 
   public async onMoodChange(mood: Mood): Promise<void> {
-    await this.isla.bot.user?.setAvatar?.(getImageFromMood(mood));
+    try {
+      await this.isla.bot.user?.setAvatar?.(getImageFromMood(mood));
+    } catch (e) {
+      // This triggers if, for example, we are being rate-limited
+    }
   }
 }
