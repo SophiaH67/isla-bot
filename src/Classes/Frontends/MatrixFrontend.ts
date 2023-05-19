@@ -4,6 +4,7 @@ import {
   SimpleFsStorageProvider,
   AutojoinRoomsMixin,
   MatrixClient,
+  RustSdkCryptoStorageProvider,
 } from "matrix-bot-sdk";
 import assert from "assert";
 import { MatrixChatEvent, MatrixEvent } from "../Utils/MatrixEvent";
@@ -16,6 +17,8 @@ import { getImageFromMood } from "../Utils/moodToImage";
 
 export default class MatrixFrontend extends BaseFrontend {
   private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
+  private crypto = new RustSdkCryptoStorageProvider("data/crypto");
+
   private client: MatrixClient | undefined;
 
   constructor(private readonly isla: Isla) {
@@ -28,7 +31,8 @@ export default class MatrixFrontend extends BaseFrontend {
     this.client = new MatrixClient(
       process.env.MATRIX_HOMESERVER as string, // To get to this point, we must have a MATRIX_HOMESERVER
       accessToken,
-      this.storage
+      this.storage,
+      this.crypto
     );
     AutojoinRoomsMixin.setupOnClient(this.client);
     this.client.on("room.event", this.handleEvent.bind(this));
