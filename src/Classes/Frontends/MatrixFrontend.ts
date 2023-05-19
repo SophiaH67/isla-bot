@@ -15,8 +15,8 @@ import { createHash } from "crypto";
 import { getImageFromMood } from "../Utils/moodToImage";
 
 export default class MatrixFrontend extends BaseFrontend {
-  private storage = new SimpleFsStorageProvider("isla-matrix.json");
-  private client!: MatrixClient;
+  private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
+  private client: MatrixClient | undefined;
 
   constructor(private readonly isla: Isla) {
     super();
@@ -44,6 +44,8 @@ export default class MatrixFrontend extends BaseFrontend {
   }
 
   public async handleEvent(roomId: string, event: MatrixEvent) {
+    if (!this.client) return; // Will never happen, but keep ts happy
+
     // Don't handle unhelpful events (ones that aren't text messages, are redacted, or sent by us)
     if (!("content" in event)) return;
     if (event["sender"] === (await this.client.getUserId())) return; // Ignore our own messages
@@ -66,7 +68,7 @@ export default class MatrixFrontend extends BaseFrontend {
 
   public async handleMessage(roomId: string, event: MatrixChatEvent) {
     const reply = (message: string) => {
-      this.client.sendNotice(roomId, message);
+      this.client?.sendNotice?.(roomId, message);
     };
 
     const message = new MockMessage(this.isla, event.content.body, reply);
@@ -129,6 +131,7 @@ export default class MatrixFrontend extends BaseFrontend {
   }
 
   private async uploadFileCached(path: string) {
+    if (!this.client) throw new Error("Matrix client not initialised");
     const pathHash = createHash("md5").update(path).digest("hex");
     const redisKey = `matrix:cache:${pathHash}`;
     const existingFile = await this.isla.redis.get(redisKey);
@@ -150,6 +153,7 @@ export default class MatrixFrontend extends BaseFrontend {
     return newMatrixFile;
   }
   public async onMoodChange(mood: Mood): Promise<void> {
+    if (!this.client) return;
     const pfp = getImageFromMood(mood);
 
     const matrixUpload = await this.uploadFileCached(pfp);
