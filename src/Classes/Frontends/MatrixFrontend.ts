@@ -167,5 +167,7 @@ export default class MatrixFrontend extends BaseFrontend {
     const matrixUpload = await this.uploadFileCached(pfp);
 
     await this.client.setAvatarUrl(matrixUpload);
+
+    this.currentMoodProfile = this.isla.moodManager.mood;
   }
 }
