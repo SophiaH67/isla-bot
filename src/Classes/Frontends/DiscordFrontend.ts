@@ -1,8 +1,6 @@
 import BaseFrontend from "./BaseFrontend";
 import Isla from "../Isla";
 import Protocol from "../protocol/Protocol";
-import Mood from "../mood/Moods";
-import { getImageFromMood } from "../Utils/moodToImage";
 
 export default class DiscordFrontend extends BaseFrontend {
   constructor(public isla: Isla) {
@@ -42,14 +40,6 @@ export default class DiscordFrontend extends BaseFrontend {
           type: "PLAYING",
         });
         break;
-    }
-  }
-
-  public async onMoodChange(mood: Mood): Promise<void> {
-    try {
-      await this.isla.bot.user?.setAvatar?.(getImageFromMood(mood));
-    } catch (e) {
-      // This triggers if, for example, we are being rate-limited
     }
   }
 }

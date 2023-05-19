@@ -11,8 +11,7 @@ export default class MoodCommand implements Command {
     conversation: Conversation,
     _args: string[]
   ): Promise<string> {
-    return `I'm currently feeling ${
-      (conversation.eris as Isla).moodManager.mood
-    }`;
+    const isla = conversation.eris as Isla;
+    return `I'm currently feeling ${isla.moodManager.mood} (was feeling ${isla.moodManager.lastMood} before)`;
   }
 }

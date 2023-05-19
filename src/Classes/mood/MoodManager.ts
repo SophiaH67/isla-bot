@@ -8,6 +8,7 @@ export default class MoodManager {
   public moodTransformer: MoodTransformer;
 
   public lastMood: Mood = Mood.Happy;
+  private lastMoodCheck: Mood = Mood.Happy;
 
   // Actual mood factors
   public sleeping = false;
@@ -103,12 +104,9 @@ export default class MoodManager {
       this.sleeping = false;
     }
 
-    const currentMood = this.mood;
-    if (this.lastMood !== currentMood) {
-    }
-    // this.isla.frontends.map((frontend) => frontend.onMoodChange(currentMood));
+    if (this.lastMoodCheck !== this.mood) this.lastMood = this.lastMoodCheck;
 
-    this.lastMood = currentMood;
+    this.lastMoodCheck = this.mood;
   }
 
   calculateMood() {
