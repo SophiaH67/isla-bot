@@ -1,6 +1,6 @@
-FROM node:19-alpine as builder
+FROM node:19-buster as builder
 WORKDIR /app
-RUN apk add --no-cache docker libc6-compat
+RUN apt update -y && apt install -y docker
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
