@@ -104,8 +104,9 @@ export default class MoodManager {
     }
 
     const currentMood = this.mood;
-    if (this.lastMood !== currentMood)
-      this.isla.frontends.map((frontend) => frontend.onMoodChange(currentMood));
+    if (this.lastMood !== currentMood) {
+    }
+    // this.isla.frontends.map((frontend) => frontend.onMoodChange(currentMood));
 
     this.lastMood = currentMood;
   }
