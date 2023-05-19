@@ -1,15 +1,6 @@
-FROM node:19-buster as builder
+FROM node:19-bullseye as builder
 WORKDIR /app
-RUN apt update -y && apt install -y docker gawk bison
-# Install exactly glibc-2.29
-RUN wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz && \
-    tar -zxvf glibc-2.29.tar.gz && \
-    cd glibc-2.29 && \
-    mkdir build_dir && \
-    cd build_dir && \
-    ../configure --prefix=/opt/glibc && \
-    make && \
-    make install
+RUN apt update -y && apt install -y docker libc6
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
