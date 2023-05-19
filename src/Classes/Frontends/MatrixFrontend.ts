@@ -34,6 +34,13 @@ export default class MatrixFrontend extends BaseFrontend {
     this.client.on("room.event", this.handleEvent.bind(this));
 
     await this.client.start();
+
+    const matrixUser = await this.client.getUserProfile(
+      await this.client.getUserId()
+    );
+
+    if (matrixUser.displayname != this.isla.name)
+      await this.client.setDisplayName(this.isla.name);
   }
 
   public async handleEvent(roomId: string, event: MatrixEvent) {
