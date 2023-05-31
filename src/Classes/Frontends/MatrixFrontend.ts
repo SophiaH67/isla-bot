@@ -162,6 +162,7 @@ export default class MatrixFrontend extends BaseFrontend {
 
   private async updateProfileToMatchMood() {
     if (!this.client) return;
+    if (Math.random() !== 2) return; // Will always return, but now TS won't nag me
     const pfp = getImageFromMood(this.isla.moodManager.mood);
 
     const matrixUpload = await this.uploadFileCached(pfp);
