@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package isla;
+
+service Isla {
+  // rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
+  rpc HandleMessage(Message) returns (Message) {}
+
+  // rpc Heartbeat(stream Heartbeat) returns (stream RequestFromIsla) {}
+}
+
+// message SubscribeRequest { Event event = 1; }
+
+// message SubscribeResponse {
+//   oneof response {
+//     EventMoodChangeMessage mood_change = 1;
+//     EventBroadcastMessage broadcast = 2;
+//   }
+// }
+
+message Message {
+  string id = 1;
+  User author = 2;
+  string content = 3;
+  string channel_id = 4;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string mention_string = 3;
+}
+
+// enum Event {
+//   MOOD_CHANGE = 0;
+//   BROADCAST = 1;
+// }
+
+// message EventMoodChangeMessage { Mood mood = 1; }
+
+// message EventBroadcastMessage { string content = 1; }
+
+// enum Mood {
+//   Asleep = 0;
+//   Exhausted = 1;
+//   Frustrated = 2;
+//   Bored = 3;
+//   Curious = 4;
+//   Happy = 5;
+// }
+
+// message Heartbeat {}
+
+// message RequestFromIsla {}
