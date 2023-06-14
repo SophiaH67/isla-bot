@@ -1,7 +1,0 @@
-FROM node:19-bullseye as builder
-WORKDIR /app
-RUN apt update -y && apt install -y docker libc6
-COPY . .
-RUN npm install
-RUN ./node_modules/.bin/tsc
-CMD ["node", "dist/index.js"]
