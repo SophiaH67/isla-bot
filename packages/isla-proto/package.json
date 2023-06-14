@@ -1,0 +1,17 @@
+{
+  "name": "@marnixah/isla-proto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "package.scripts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "bsm build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@under_koen/bsm": "^0.0.3",
+    "ncp": "^2.0.0",
+    "rimraf": "^5.0.1"
+  }
+}

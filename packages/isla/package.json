@@ -1,5 +1,5 @@
 {
-  "name": "isla",
+  "name": "@marnixah/isla",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@doist/todoist-api-typescript": "^2.1.2",
+    "@marnixah/isla-proto": "^1.0.0",
     "@node-redis/client": "^1.0.6",
     "assert": "^2.0.0",
     "body-parser": "^1.20.0",
