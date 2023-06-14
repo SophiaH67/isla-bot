@@ -1,6 +1,6 @@
 import Command from "eris-boreas/lib/src/conversation/Command";
 import Conversation from "eris-boreas/lib/src/conversation/Conversation";
-import Isla from "src/Classes/Isla";
+import Isla from "packages/isla/src/Classes/Isla";
 
 export default class WakeUpCommand implements Command {
   public aliases = ["wake", "wakeup"];

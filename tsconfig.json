@@ -5,7 +5,7 @@
     "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
     "sourceMap": false,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "packages/isla/src",
     "strict": true,
     "types": ["node"],
     "esModuleInterop": true,
