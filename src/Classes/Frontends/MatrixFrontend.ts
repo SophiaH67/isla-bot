@@ -75,7 +75,7 @@ export default class MatrixFrontend extends BaseFrontend {
     if (this.isla.moodManager.mood !== this.currentMoodProfile)
       await this.updateProfileToMatchMood();
     const reply = (message: string) => {
-      this.client?.sendNotice?.(roomId, message);
+      this.client?.sendMessage?.(roomId, message);
     };
 
     const message = new MockMessage(this.isla, event.content.body, reply);
