@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import { protobufPackage } from '@marnixah/isla-proto/dist/isla';
+import { protobufPackage } from '@marnixah/isla-proto/dist/islachat';
 import { join } from 'path';
 
 async function bootstrap() {
@@ -11,7 +11,7 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: protobufPackage,
-        protoPath: join(__dirname, '../../isla-proto/src/isla.proto'),
+        protoPath: join(__dirname, '../../isla-proto/src/islachat.proto'),
       },
     },
   );

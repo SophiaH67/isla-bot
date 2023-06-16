@@ -5,7 +5,8 @@
   "main": "package.scripts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "bsm build"
+    "build": "bsm build",
+    "setup": "bsm build"
   },
   "author": "",
   "license": "ISC",

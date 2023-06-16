@@ -3,6 +3,9 @@
     "outDir": "./dist",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "baseUrl": "./"
-  }
+    "baseUrl": "./",
+    "declaration": true
+  },
+  "include": ["proto-dist/**/*.ts"],
+  "exclude": ["src"]
 }

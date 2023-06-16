@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package isla;
+
+service IslaChat {
+  // rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
+  rpc Conversation(stream Message) returns (stream ConversationReply) {}
+
+  // rpc Heartbeat(stream Heartbeat) returns (stream RequestFromIsla) {}
+}
+
+// message SubscribeRequest { Event event = 1; }
+
+// message SubscribeResponse {
+//   oneof response {
+//     EventMoodChangeMessage mood_change = 1;
+//     EventBroadcastMessage broadcast = 2;
+//   }
+// }
+
+message Message {
+  string id = 1;
+  User author = 2;
+  string content = 3;
+  string channel_id = 4;
+  optional string reply_to_id = 5;
+}
+
+message ConversationReply {
+  string content = 1; // Can be empty string in case of just ending conversation
+  bool last = 2;
+  optional string reply_to_id = 3;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string mention_string = 3;
+  bool is_isla = 4;
+}
+
+// enum Event {
+//   MOOD_CHANGE = 0;
+//   BROADCAST = 1;
+// }
+
+// message EventMoodChangeMessage { Mood mood = 1; }
+
+// message EventBroadcastMessage { string content = 1; }
+
+// message Heartbeat {}
+
+// message RequestFromIsla {}
