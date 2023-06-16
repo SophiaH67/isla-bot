@@ -5,8 +5,6 @@ import Conversation from './Conversation';
 
 @Injectable()
 export class IslaChatService {
-  private readonly commands = [];
-
   constructor(
     private readonly directiveHandlerService: DirectiveHandlerService,
   ) {}
