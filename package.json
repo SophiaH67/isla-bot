@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:ts": "tsc -w",
-    "dev:js": "nodemon dist/index.js",
+    "start:dev": "lerna run start:dev --parallel",
     "dev": "nodemon --ignore data/ --verbose src/index.ts",
     "postinstall": "lerna bootstrap --ignore-scripts && lerna run setup --no-bail"
   },
