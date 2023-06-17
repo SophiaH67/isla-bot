@@ -71,7 +71,5 @@ export default class Conversation {
     };
 
     this.outgoingSubscriber.next(message);
-
-    if (last) this.outgoingSubscriber.complete();
   }
 }
