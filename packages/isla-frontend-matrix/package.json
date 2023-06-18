@@ -1,10 +1,10 @@
 {
   "name": "isla-frontend-matrix",
   "version": "1.0.0",
-  "description": "Matrix frontend for Isla written in rust(🚀)",
+  "description": "Matrix frontend for Isla written in python",
   "scripts": {
-    "setup": "cargo install protobuf-codegen grpcio-compiler && protoc  src/isla.proto",
-    "start:dev": "open-in-terminal-tab -t isla-frontend-matrix -- npx nodemon -w src --exec \"cargo run --bin isla-frontend-matrix\""
+    "setup": "pip3 install -r requirements.txt",
+    "start:dev": "open-in-terminal-tab -t isla-frontend-matrix -- npx nodemon --watch src --exec \"python3 src/main.py\""
   },
   "author": "",
   "license": "ISC",

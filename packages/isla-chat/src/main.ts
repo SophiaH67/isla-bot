@@ -11,7 +11,10 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: protobufPackage,
-        protoPath: join(__dirname, '../../isla-proto/src/islachat.proto'),
+        protoPath: join(
+          __dirname,
+          '../../isla-proto/dist/proto/islachat.proto',
+        ),
       },
     },
   );
