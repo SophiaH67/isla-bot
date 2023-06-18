@@ -1,2 +1,5 @@
 dist
 proto-dist
+# src/*.rs
+# !src/lib.rs
+target

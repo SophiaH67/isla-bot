@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package isla;
+package islachat;
 
 service IslaChat {
   // rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
