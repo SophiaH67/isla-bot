@@ -38,7 +38,6 @@ export default class MatrixFrontend extends BaseFrontend {
     this.client.on("room.event", this.handleEvent.bind(this));
     // On invite
     this.client.on("room.invite", (roomId, _inviteEvent) => {
-      debugger;
       console.log("Got invite to room", roomId);
       this.client?.joinRoom(roomId);
     });
