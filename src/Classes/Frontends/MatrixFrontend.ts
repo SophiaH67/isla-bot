@@ -2,7 +2,6 @@ import BaseFrontend from "./BaseFrontend";
 import {
   MatrixAuth,
   SimpleFsStorageProvider,
-  AutojoinRoomsMixin,
   MatrixClient,
   RustSdkCryptoStorageProvider,
 } from "matrix-bot-sdk";
@@ -35,8 +34,14 @@ export default class MatrixFrontend extends BaseFrontend {
       this.storage,
       this.crypto
     );
-    AutojoinRoomsMixin.setupOnClient(this.client);
+
     this.client.on("room.event", this.handleEvent.bind(this));
+    // On invite
+    this.client.on("room.invite", (roomId, _inviteEvent) => {
+      debugger;
+      console.log("Got invite to room", roomId);
+      this.client?.joinRoom(roomId);
+    });
 
     await this.client.start();
 
@@ -75,7 +80,10 @@ export default class MatrixFrontend extends BaseFrontend {
     if (this.isla.moodManager.mood !== this.currentMoodProfile)
       await this.updateProfileToMatchMood();
     const reply = (message: string) => {
-      this.client?.sendMessage?.(roomId, message);
+      this.client?.sendMessage?.(roomId, {
+        msgtype: "m.text",
+        body: message,
+      });
     };
 
     const message = new MockMessage(this.isla, event.content.body, reply);
