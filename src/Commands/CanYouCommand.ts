@@ -1,5 +1,5 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
+import Conversation from "../Classes/Utils/Conversation";
+import Command from "../Classes/Utils/Command";
 
 export default class CanYouCommand implements Command {
   public name = "can you";
@@ -31,7 +31,7 @@ export default class CanYouCommand implements Command {
     // while putting quotes around each element
     const newMessage = args.slice(1).join(" ");
 
-    return await conversation.eris.directiveHandler.handleDirective(
+    return await conversation.isla.directiveHandler.handleDirective(
       conversation,
       newMessage
     );

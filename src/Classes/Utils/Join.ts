@@ -50,7 +50,8 @@ export default class Join {
    */
   private apiKey: string =
     process.env.JOIN_KEY || assert.fail("JOIN_KEY is required");
-  public isla = Isla.Instance;
+
+  constructor(private isla: Isla) {}
 
   public constructURL(endpoint: string, params: any = {}): string {
     params.apikey = this.apiKey;

@@ -1,7 +1,7 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import { TodoistApi } from "@doist/todoist-api-typescript";
 import assert from "assert";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 
 export default class RemindmeCommand implements Command {
   public aliases = ["remindme", "remind"];

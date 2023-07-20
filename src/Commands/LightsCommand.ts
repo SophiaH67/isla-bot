@@ -1,5 +1,5 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 import HomeAssistant from "../Classes/Utils/HomeAssistant";
 
 export default class LightsCommand implements Command {

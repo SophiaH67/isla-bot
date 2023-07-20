@@ -1,9 +1,13 @@
 import BaseFrontend from "./BaseFrontend";
 import readline from "readline/promises";
 import Isla from "../Isla";
-import MockMessage from "../Utils/MockMessage";
+import { IslaMessage } from "../interfaces/IslaMessage";
+import { IslaUser } from "../interfaces/IslaUser";
+import { uuid } from "uuidv4";
 
 export default class CLIFrontend extends BaseFrontend {
+  private userAuthor = new IslaUser("cli-user", "Marni");
+
   constructor(private readonly isla: Isla) {
     super();
   }
@@ -24,9 +28,16 @@ export default class CLIFrontend extends BaseFrontend {
       if (answer === "quit") {
         break;
       }
-      const message = new MockMessage(this.isla, answer, (content) =>
-        console.log(`[BOT] ${content}`)
+      const message: IslaMessage = new IslaMessage(
+        this.isla,
+        answer,
+        async (content) => {
+          console.log(`[Isla] ${content}`);
+        },
+        this.userAuthor,
+        uuid()
       );
+
       await this.isla.onMessage(message);
     }
   }

@@ -1,6 +1,5 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
-import Isla from "../Classes/Isla";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 import Protocol from "../Classes/protocol/Protocol";
 
 export default class EchoCommand implements Command {
@@ -22,7 +21,7 @@ export default class EchoCommand implements Command {
         args[0]
       }'. Valid protocols are: ${Object.values(Protocol).join(", ")}`;
 
-    const isla = conversation.eris as Isla;
+    const isla = conversation.isla;
 
     const override = args.join(" ").toLowerCase().includes("override");
 

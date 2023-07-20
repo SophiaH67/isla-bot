@@ -1,6 +1,5 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
-import Isla from "src/Classes/Isla";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 
 export default class WakeUpCommand implements Command {
   public aliases = ["wake", "wakeup"];
@@ -11,7 +10,7 @@ export default class WakeUpCommand implements Command {
     conversation: Conversation,
     _args: string[]
   ): Promise<string> {
-    const isla = conversation.eris as Isla;
+    const isla = conversation.isla;
     if (isla.moodManager.sleeping) {
       isla.moodManager.wakeUp();
       return "Why did you wake me up?";

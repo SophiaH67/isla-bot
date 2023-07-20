@@ -1,8 +1,10 @@
 import BaseFrontend from "./BaseFrontend";
 import Isla from "../Isla";
-import MockMessage from "../Utils/MockMessage";
 import express from "express";
 import bodyParser from "body-parser";
+import { IslaUser } from "../interfaces/IslaUser";
+import { IslaMessage } from "../interfaces/IslaMessage";
+import { uuid } from "uuidv4";
 
 export default class HttpFrontend extends BaseFrontend {
   private app!: express.Application;
@@ -24,8 +26,20 @@ export default class HttpFrontend extends BaseFrontend {
         res.status(400).send("No command provided");
         return;
       }
-      const message = new MockMessage(this.isla, command, (content) =>
-        res.write(content)
+      // const message = new MockMessage(this.isla, command, (content) =>
+      //   res.write(content)
+      // );
+
+      const user = new IslaUser(req.ip, req.ip);
+
+      const message = new IslaMessage(
+        this.isla,
+        command,
+        async (content) => {
+          res.write(content);
+        },
+        user,
+        uuid()
       );
       await this.isla.onMessage(message);
 

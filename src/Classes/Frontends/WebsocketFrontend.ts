@@ -1,9 +1,11 @@
 import BaseFrontend from "./BaseFrontend";
 import { Server } from "socket.io";
 import Isla from "../Isla";
-import MockMessage from "../Utils/MockMessage";
 import { createServer } from "http";
 import Protocol from "../protocol/Protocol";
+import { IslaUser } from "../interfaces/IslaUser";
+import { IslaMessage } from "../interfaces/IslaMessage";
+import { uuid } from "uuidv4";
 
 interface ServerToClientEvents {
   broadcast: (message: string) => void;
@@ -30,7 +32,6 @@ export default class WebsocketFrontend extends BaseFrontend {
     InterServerEvents,
     SocketData
   >;
-
   constructor(private readonly isla: Isla) {
     super();
   }
@@ -51,9 +52,17 @@ export default class WebsocketFrontend extends BaseFrontend {
     server.listen(1514);
 
     this.io.on("connection", (socket) => {
+      const userAuthor = new IslaUser("websocket-" + socket.id, socket.id);
+
       socket.on("command", async (command) => {
-        const message = new MockMessage(this.isla, command, (content) =>
-          socket.emit("broadcast", content)
+        const message: IslaMessage = new IslaMessage(
+          this.isla,
+          command,
+          async (content) => {
+            socket.emit("broadcast", content);
+          },
+          userAuthor,
+          uuid()
         );
         await this.isla.onMessage(message);
       });

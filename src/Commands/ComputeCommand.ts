@@ -1,6 +1,6 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import { Configuration, OpenAIApi } from "openai";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 
 export default class ComputeCommand extends Command {
   public aliases = ["compute"];
@@ -27,9 +27,7 @@ export default class ComputeCommand extends Command {
 
     const choice = completion.data.choices[0].text.trim();
 
-    await conversation.reference.reply({
-      content: choice,
-    });
+    await conversation.reference.reply(choice);
 
     return ""; // Skip the reply middleware
   }

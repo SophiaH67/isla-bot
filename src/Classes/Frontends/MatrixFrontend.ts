@@ -7,12 +7,13 @@ import {
 } from "matrix-bot-sdk";
 import assert from "assert";
 import { MatrixChatEvent, MatrixEvent } from "../Utils/MatrixEvent";
-import MockMessage from "../Utils/MockMessage";
 import Isla from "../Isla";
 import { readFile } from "fs/promises";
 import Mood from "../mood/Moods";
 import { createHash } from "crypto";
 import { getImageFromMood } from "../Utils/moodToImage";
+import { IslaMessage } from "../interfaces/IslaMessage";
+import { IslaUser } from "../interfaces/IslaUser";
 
 export default class MatrixFrontend extends BaseFrontend {
   private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
@@ -35,6 +36,8 @@ export default class MatrixFrontend extends BaseFrontend {
       this.crypto
     );
 
+    await this.client.crypto.prepare(await this.client.getJoinedRooms());
+
     this.client.on("room.event", this.handleEvent.bind(this));
     // On invite
     this.client.on("room.invite", (roomId, _inviteEvent) => {
@@ -48,8 +51,8 @@ export default class MatrixFrontend extends BaseFrontend {
       await this.client.getUserId()
     );
 
-    if (matrixUser.displayname != this.isla.name)
-      await this.client.setDisplayName(this.isla.name);
+    if (matrixUser.displayname != this.isla.constructor.name)
+      await this.client.setDisplayName(this.isla.constructor.name);
   }
 
   public async handleEvent(roomId: string, event: MatrixEvent) {
@@ -75,17 +78,59 @@ export default class MatrixFrontend extends BaseFrontend {
     }
   }
 
+  private async messageEventToIslaMessage(
+    roomId: string,
+    event: MatrixChatEvent
+  ): Promise<IslaMessage> {
+    const reply = async (message: string) => {
+      const eventId = await this.client?.sendMessage?.(roomId, {
+        msgtype: "m.text",
+        body: message,
+        "m.relates_to": {
+          "m.in_reply_to": {
+            event_id: event.event_id,
+          },
+        },
+      });
+
+      if (!eventId) throw new Error("Failed to send message");
+
+      const chatEvent = await this.client?.getEvent(roomId, eventId);
+
+      if (!chatEvent) throw new Error("Failed to get event");
+
+      return this.messageEventToIslaMessage(roomId, chatEvent);
+    };
+
+    const user = await this.client?.getUserProfile(event.sender);
+
+    const author = new IslaUser(event.sender, user?.displayname || "Unknown");
+
+    const replyId: string | undefined =
+      "event_id" in
+        //@ts-expect-error - Matrix not being typed nya~
+        (event.content?.["m.relates_to"]?.["m.in_reply_to"] || {}) &&
+      //@ts-expect-error - Matrix not being typed nya~
+      event.content?.["m.relates_to"]?.["m.in_reply_to"]?.event_id;
+
+    const message = new IslaMessage(
+      this.isla,
+      event.content.body,
+      reply,
+      author,
+      event.event_id,
+      replyId ? { id: replyId } : undefined
+    );
+
+    return message;
+  }
+
   public async handleMessage(roomId: string, event: MatrixChatEvent) {
     if (this.isla.moodManager.mood !== this.currentMoodProfile)
       await this.updateProfileToMatchMood();
-    const reply = (message: string) => {
-      this.client?.sendMessage?.(roomId, {
-        msgtype: "m.text",
-        body: message,
-      });
-    };
 
-    const message = new MockMessage(this.isla, event.content.body, reply);
+    const message = await this.messageEventToIslaMessage(roomId, event);
+
     await this.isla.onMessage(message);
   }
 

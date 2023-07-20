@@ -1,6 +1,6 @@
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import cp from "child_process";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 
 /**
  * DataSpooler is a class that data can be written to so that it comes

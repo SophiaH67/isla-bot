@@ -1,7 +1,7 @@
 import { OpenWeatherMapApi } from "node-ts-open-weather-map";
 import assert from "assert";
-import Command from "eris-boreas/lib/src/conversation/Command";
-import Conversation from "eris-boreas/lib/src/conversation/Conversation";
+import Command from "../Classes/Utils/Command";
+import Conversation from "../Classes/Utils/Conversation";
 
 interface WeatherResponse {
   coord: {
