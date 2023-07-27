@@ -5,6 +5,14 @@ export interface MatrixChatEvent {
   content: {
     msgtype: "m.text";
     body: string;
+    "m.relates_to"?: {
+      "m.in_reply_to"?: {
+        event_id?: string;
+      };
+
+      "rel_type"?: "m.thread";
+      "event_id"?: string;
+    };
   };
   sender: string;
   room_id: string;

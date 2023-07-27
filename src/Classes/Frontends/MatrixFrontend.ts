@@ -90,6 +90,10 @@ export default class MatrixFrontend extends BaseFrontend {
           "m.in_reply_to": {
             event_id: event.event_id,
           },
+          ...(event.content["m.relates_to"]?.rel_type === "m.thread" && {
+            rel_type: "m.thread",
+            event_id: event.content["m.relates_to"]?.event_id,
+          }),
         },
       });
 
@@ -107,11 +111,9 @@ export default class MatrixFrontend extends BaseFrontend {
     const author = new IslaUser(event.sender, user?.displayname || "Unknown");
 
     const replyId: string | undefined =
-      "event_id" in
-        //@ts-expect-error - Matrix not being typed nya~
-        (event.content?.["m.relates_to"]?.["m.in_reply_to"] || {}) &&
-      //@ts-expect-error - Matrix not being typed nya~
-      event.content?.["m.relates_to"]?.["m.in_reply_to"]?.event_id;
+      "event_id" in (event.content?.["m.relates_to"]?.["m.in_reply_to"] || {})
+        ? event.content?.["m.relates_to"]?.["m.in_reply_to"]?.event_id
+        : undefined;
 
     const message = new IslaMessage(
       this.isla,
