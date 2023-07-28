@@ -15,6 +15,7 @@ import HttpFrontend from "./Frontends/HttpFrontend";
 import HomeAssistantFrontend from "./Frontends/HomeAssistantFrontend";
 import MatrixFrontend from "./Frontends/MatrixFrontend";
 import CommandService from "../Services/CommandService";
+import TwitterEmbedService from "../Services/TwitterEmbedService";
 
 export default class Isla {
   public redis = createClient({
@@ -60,6 +61,7 @@ export default class Isla {
     // Load services
     this.services.push(new CommandService());
     this.services.push(new ConversationManagerService());
+    this.services.push(new TwitterEmbedService());
   }
 
   public async broadcast(message: string) {

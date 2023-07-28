@@ -12,8 +12,18 @@ import { readFile } from "fs/promises";
 import Mood from "../mood/Moods";
 import { createHash } from "crypto";
 import { getImageFromMood } from "../Utils/moodToImage";
-import { IslaMessage } from "../interfaces/IslaMessage";
+import { IslaMessage, ReplyOptions } from "../interfaces/IslaMessage";
 import { IslaUser } from "../interfaces/IslaUser";
+import { fromBuffer } from "file-type";
+import sharp from "sharp";
+import { marked } from "marked";
+
+const fetchToBuffer = async (url: string) => {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return buffer;
+};
 
 export default class MatrixFrontend extends BaseFrontend {
   private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
@@ -82,22 +92,83 @@ export default class MatrixFrontend extends BaseFrontend {
     roomId: string,
     event: MatrixChatEvent
   ): Promise<IslaMessage> {
-    const reply = async (message: string) => {
+    const reply = async (message: string, options: ReplyOptions = {}) => {
+      const threadId =
+        (event.content["m.relates_to"]?.rel_type === "m.thread" &&
+          event.content["m.relates_to"]?.event_id) ||
+        (options.forceThread && event.event_id);
+
+      const platformNativeReply = options.platformNativeReply ?? true;
+
       const eventId = await this.client?.sendMessage?.(roomId, {
         msgtype: "m.text",
         body: message,
+        format: "org.matrix.custom.html",
+        formatted_body: marked.parse(message),
         "m.relates_to": {
-          "m.in_reply_to": {
-            event_id: event.event_id,
-          },
-          ...(event.content["m.relates_to"]?.rel_type === "m.thread" && {
+          ...(platformNativeReply && {
+            "m.in_reply_to": {
+              event_id: event.event_id,
+            },
+          }),
+          ...(threadId && {
             rel_type: "m.thread",
-            event_id: event.content["m.relates_to"]?.event_id,
+            event_id: threadId,
           }),
         },
       });
 
       if (!eventId) throw new Error("Failed to send message");
+
+      for (const media of options.media || []) {
+        const buffer =
+          typeof media === "string" ? await fetchToBuffer(media) : media;
+
+        const fileType = await fromBuffer(buffer);
+
+        if (!fileType) throw new Error("Failed to get file type");
+
+        if (!fileType.mime.startsWith("image/"))
+          throw new Error("File type is not an image");
+
+        const imageDetails = await sharp(buffer).metadata();
+
+        const encrypted = await this.client?.crypto.encryptMedia(buffer);
+        if (!encrypted) throw new Error("Failed to encrypt media");
+
+        const hash = createHash("sha256").update(buffer).digest("hex");
+        const filename = hash + "." + fileType.ext;
+
+        const mxc = await this.client?.uploadContent(
+          encrypted.buffer,
+          fileType.mime,
+          filename
+        );
+
+        if (!mxc) throw new Error("Failed to upload media");
+
+        await this.client?.sendMessage(roomId, {
+          msgtype: "m.image",
+          body: filename,
+          info: {
+            w: imageDetails.width,
+            h: imageDetails.height,
+            mimetype: fileType.mime,
+            size: buffer.length,
+          },
+          file: {
+            url: mxc,
+            ...encrypted.file,
+          },
+
+          ...(threadId && {
+            "m.relates_to": {
+              rel_type: "m.thread",
+              event_id: threadId,
+            },
+          }),
+        });
+      }
 
       const chatEvent = await this.client?.getEvent(roomId, eventId);
 

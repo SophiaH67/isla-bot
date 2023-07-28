@@ -58,4 +58,12 @@ export default class DiscordFrontend extends BaseFrontend {
         break;
     }
   }
+
+  public async start(): Promise<void> {
+    this.bot.login(process.env.DISCORD_TOKEN);
+
+    this.bot.on("ready", () => {
+      console.log(`Logged in as ${this.bot.user?.tag}!`);
+    });
+  }
 }
