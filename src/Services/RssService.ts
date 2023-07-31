@@ -59,12 +59,23 @@ export class RssService implements BaseService {
     );
   }
 
+  private getPublishedDate(item: Parser.Item) {
+    //@ts-expect-error - Weird typings, also thx github for using atom instead of xss
+    const dateStr = item.pubDate || item.isoDate || item.published;
+
+    if (!dateStr) {
+      return new Date(0);
+    }
+
+    return new Date(dateStr);
+  }
+
   private async checkFeed(feed: RssFeed) {
     const channel = this.isla.getChannel(feed.syncFrontend, feed.syncChannel);
 
     const { items } = await this.parser.parseURL(feed.url);
     const newItems = items.filter((item) => {
-      return new Date(item.pubDate || 0) > feed.lastChecked;
+      return this.getPublishedDate(item) > feed.lastChecked;
     });
 
     for (const item of newItems) {
