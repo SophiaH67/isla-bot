@@ -63,7 +63,16 @@ export default class RssCommand implements Command {
     }
 
     if (args[1] === "list") {
-      const feeds = await prisma.rssFeed.findMany();
+      const feeds = await prisma.rssFeed.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          syncFrontend:
+            conversation.reference.channel.frontend.constructor.name,
+          syncChannel: conversation.reference.channel.id,
+        },
+      });
 
       if (feeds.length === 0) {
         return "No RSS feeds";
