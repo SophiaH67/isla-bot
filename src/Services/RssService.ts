@@ -5,7 +5,7 @@ import { RssFeed } from "@prisma/client";
 import Parser from "rss-parser";
 
 export class RssService implements BaseService {
-  private static CHECK_INTERVAL = 1000 * 60 * 1; // 5 minutes
+  private static CHECK_INTERVAL = 1000 * 60 * 1;
 
   private parser: Parser;
   private prisma!: PrismaService;
