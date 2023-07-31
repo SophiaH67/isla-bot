@@ -1,6 +1,7 @@
 import cp from "child_process";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
+import { AdminGuard } from "../Classes/Utils/AdminGuard";
 
 /**
  * DataSpooler is a class that data can be written to so that it comes
@@ -55,12 +56,8 @@ export default class ShellCommand implements Command {
   public usage = "shell <command>";
   public aliases = ["shell ", "sh ", "!", "eval "];
 
-  private allowedUsers = ["178210163369574401", "231446107794702336"];
-
+  @AdminGuard
   public run(conversation: Conversation, args: string[]): Promise<string> {
-    if (!this.allowedUsers.includes(conversation.messages[0].author.id)) {
-      return Promise.resolve("You are not allowed to use this command");
-    }
     const [command, ...commandArgs] = args.slice(1);
 
     // Pipe the output of the command to the channel

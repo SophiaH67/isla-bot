@@ -4,6 +4,7 @@ import Isla from "../Isla";
 import { IslaMessage } from "../interfaces/IslaMessage";
 import { IslaUser } from "../interfaces/IslaUser";
 import { uuid } from "uuidv4";
+import { IslaChannel } from "../interfaces/IslaChannel";
 
 export default class CLIFrontend extends BaseFrontend {
   private userAuthor = new IslaUser("cli-user", "Marni");
@@ -35,7 +36,8 @@ export default class CLIFrontend extends BaseFrontend {
           console.log(`[Isla] ${content}`);
         },
         this.userAuthor,
-        uuid()
+        uuid(),
+        new IslaChannel("cli", this)
       );
 
       await this.isla.onMessage(message);

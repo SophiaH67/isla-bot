@@ -23,17 +23,34 @@ export default class MoodTransformer {
   async transformGeneric(prompt: string): Promise<string> {
     const cached = this.responseCache.get(prompt);
     if (cached) return cached;
-    const completion = await this.openAI.createCompletion("text-davinci-002", {
-      prompt,
-      max_tokens: 64,
-    });
-    if (!completion.data.choices) {
-      return "I'm sorry, I don't understand.";
+
+    let tries = 0;
+
+    while (tries < 3) {
+      try {
+        const completion = await this.openAI.createCompletion(
+          "text-davinci-002",
+          {
+            prompt,
+            max_tokens: 64,
+          }
+        );
+        if (
+          !completion.data.choices ||
+          completion.data.choices[0].text === undefined
+        ) {
+          throw new Error("No choices");
+        }
+
+        const choice = completion.data.choices[0].text;
+        this.responseCache.set(prompt, choice);
+        return choice;
+      } catch (e) {
+        tries++;
+      }
     }
-    const choice =
-      completion.data.choices[0].text || "I'm sorry, I don't understand.";
-    this.responseCache.set(prompt, choice);
-    return choice;
+
+    throw new Error("Failed to get response from OpenAI");
   }
 
   async transformExhausted(message: string): Promise<string> {

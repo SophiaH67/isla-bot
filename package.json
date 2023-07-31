@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ts": "tsc -w",
     "dev:js": "nodemon dist/index.js",
-    "dev": "nodemon --ignore data/ --verbose src/index.ts"
+    "dev": "nodemon --ignore data/ --ignore prisma/ --verbose src/index.ts",
+    "postinstall": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy"
   },
   "author": "",
   "license": "ISC",
@@ -18,11 +21,13 @@
     "@types/prompt": "^1.1.2",
     "@types/tough-cookie": "^4.0.2",
     "nodemon": "^2.0.16",
+    "prisma": "^5.0.0",
     "typescript": "^4.6.4"
   },
   "dependencies": {
     "@doist/todoist-api-typescript": "^2.1.2",
     "@node-redis/client": "^1.0.6",
+    "@prisma/client": "^5.0.0",
     "@the-convocation/twitter-scraper": "^0.4.0",
     "@types/marked": "^5.0.1",
     "assert": "^2.0.0",
@@ -37,6 +42,7 @@
     "openai": "^2.0.5",
     "prompt": "^1.3.0",
     "redis": "^4.1.0",
+    "rss-parser": "^3.13.0",
     "sharp": "^0.32.4",
     "socket.io": "^4.5.4",
     "uuidv4": "^6.2.13"

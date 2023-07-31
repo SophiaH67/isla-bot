@@ -1,4 +1,5 @@
 import Isla from "../Isla";
+import { IslaChannel } from "./IslaChannel";
 import { IslaUser } from "./IslaUser";
 
 export interface ReplyOptions {
@@ -20,6 +21,7 @@ export class IslaMessage {
     ) => Promise<IslaMessage | void>,
     public readonly author: IslaUser,
     public readonly id: string,
+    public readonly channel: IslaChannel,
     public readonly replyTo?: IslaPartialMessage
   ) {}
 }

@@ -16,6 +16,9 @@ import HomeAssistantFrontend from "./Frontends/HomeAssistantFrontend";
 import MatrixFrontend from "./Frontends/MatrixFrontend";
 import CommandService from "../Services/CommandService";
 import TwitterEmbedService from "../Services/TwitterEmbedService";
+import { PrismaService } from "../Services/PrismaService";
+import { RssService } from "../Services/RssService";
+import { IslaChannel } from "./interfaces/IslaChannel";
 
 export default class Isla {
   public redis = createClient({
@@ -26,8 +29,8 @@ export default class Isla {
   public conversationManager = new ConversationManagerService();
   public directiveHandler = new DirectiveHandler(this);
 
-  public frontends: BaseFrontend[] = [];
-  private services: BaseService[] = [];
+  public frontends: BaseFrontend[];
+  private services: BaseService[];
   public moodManager: MoodManager;
   public protocolManager: ProtocolManager;
 
@@ -50,18 +53,24 @@ export default class Isla {
     assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
 
     // Load frontends
-    this.frontends.push(new DiscordFrontend(this));
-    this.frontends.push(new CLIFrontend(this));
-    this.frontends.push(new JoinFrontend(this));
-    this.frontends.push(new WebsocketFrontend(this));
-    this.frontends.push(new HttpFrontend(this));
-    this.frontends.push(new HomeAssistantFrontend());
-    this.frontends.push(new MatrixFrontend(this));
+    this.frontends = [
+      new DiscordFrontend(this),
+      new CLIFrontend(this),
+      new JoinFrontend(this),
+      new WebsocketFrontend(this),
+      new HttpFrontend(this),
+      new HomeAssistantFrontend(),
+      new MatrixFrontend(this),
+    ];
 
     // Load services
-    this.services.push(new CommandService());
-    this.services.push(new ConversationManagerService());
-    this.services.push(new TwitterEmbedService());
+    this.services = [
+      new PrismaService(),
+      new RssService(),
+      new CommandService(),
+      new ConversationManagerService(),
+      new TwitterEmbedService(),
+    ];
   }
 
   public async broadcast(message: string) {
@@ -98,5 +107,29 @@ export default class Isla {
     }
 
     return serviceInstance as T;
+  }
+
+  public getFrontend(frontendName: string): BaseFrontend {
+    const frontend = this.frontends.find(
+      (frontend) => frontend.constructor.name === frontendName
+    );
+
+    if (!frontend) {
+      throw new Error(`Frontend ${frontendName} not found`);
+    }
+
+    return frontend;
+  }
+
+  public getChannel(frontendName: string, channelId: string): IslaChannel {
+    const frontend = this.getFrontend(frontendName);
+    return new IslaChannel(channelId, frontend);
+  }
+
+  public async sendMessage(
+    channel: IslaChannel,
+    message: string
+  ): Promise<void> {
+    await channel.frontend.sendMessage(channel.id, message);
   }
 }

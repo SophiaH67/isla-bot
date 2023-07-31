@@ -17,6 +17,7 @@ import { IslaUser } from "../interfaces/IslaUser";
 import { fromBuffer } from "file-type";
 import sharp from "sharp";
 import { marked } from "marked";
+import { IslaChannel } from "../interfaces/IslaChannel";
 
 const fetchToBuffer = async (url: string) => {
   const response = await fetch(url);
@@ -192,6 +193,7 @@ export default class MatrixFrontend extends BaseFrontend {
       reply,
       author,
       event.event_id,
+      new IslaChannel(roomId, this),
       replyId ? { id: replyId } : undefined
     );
 
@@ -205,6 +207,15 @@ export default class MatrixFrontend extends BaseFrontend {
     const message = await this.messageEventToIslaMessage(roomId, event);
 
     await this.isla.onMessage(message);
+  }
+
+  public async sendMessage(channelId: string, message: string): Promise<void> {
+    const roomId = channelId;
+
+    await this.client?.sendMessage(roomId, {
+      msgtype: "m.text",
+      body: message,
+    });
   }
 
   private async getAccessToken(): Promise<string> {

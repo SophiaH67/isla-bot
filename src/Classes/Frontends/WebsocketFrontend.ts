@@ -6,6 +6,7 @@ import Protocol from "../protocol/Protocol";
 import { IslaUser } from "../interfaces/IslaUser";
 import { IslaMessage } from "../interfaces/IslaMessage";
 import { uuid } from "uuidv4";
+import { IslaChannel } from "../interfaces/IslaChannel";
 
 interface ServerToClientEvents {
   broadcast: (message: string) => void;
@@ -62,7 +63,8 @@ export default class WebsocketFrontend extends BaseFrontend {
             socket.emit("broadcast", content);
           },
           userAuthor,
-          uuid()
+          uuid(),
+          new IslaChannel(socket.id, this)
         );
         await this.isla.onMessage(message);
       });

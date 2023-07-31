@@ -131,3 +131,5 @@ dist
 
 # Redis dump
 dump.rdb
+
+prisma/dev.db

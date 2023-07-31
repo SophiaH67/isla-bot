@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import { IslaUser } from "../interfaces/IslaUser";
 import { IslaMessage } from "../interfaces/IslaMessage";
 import { uuid } from "uuidv4";
+import { IslaChannel } from "../interfaces/IslaChannel";
 
 export default class HttpFrontend extends BaseFrontend {
   private app!: express.Application;
@@ -39,7 +40,8 @@ export default class HttpFrontend extends BaseFrontend {
           res.write(content);
         },
         user,
-        uuid()
+        uuid(),
+        new IslaChannel("http", this)
       );
       await this.isla.onMessage(message);
 
