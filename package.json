@@ -11,7 +11,7 @@
     "start:prod": "node dist/index.js",
     "postinstall": "prisma generate",
     "migrate:dev": "prisma migrate dev",
-    "migrate:deploy": "prisma migrate deploy"
+    "migrate:prod": "prisma migrate deploy"
   },
   "author": "",
   "license": "ISC",
