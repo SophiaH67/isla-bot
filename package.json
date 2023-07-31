@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ts": "tsc -w",
     "dev:js": "nodemon dist/index.js",
-    "dev": "nodemon --ignore data/ --ignore prisma/ --verbose src/index.ts",
+    "start:dev": "nodemon --ignore data/ --ignore prisma/ --verbose src/index.ts",
+    "start:prod": "node dist/index.js",
     "postinstall": "prisma generate",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy"

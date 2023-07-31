@@ -6,4 +6,4 @@ COPY package-lock.json .
 COPY . .
 RUN npm install
 RUN ./node_modules/.bin/tsc
-CMD ["node", "dist/index.js"]
+CMD ["sh", "-c", "npm run migrate:prod && npm run start:prod"]
