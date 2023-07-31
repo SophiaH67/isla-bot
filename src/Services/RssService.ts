@@ -44,6 +44,22 @@ export class RssService implements BaseService {
     return feed;
   }
 
+  public async removeFeed(id: string) {
+    const deletedFeed = await this.prisma.rssFeed
+      .delete({
+        where: { id },
+      })
+      .catch(() => null);
+
+    if (!deletedFeed) {
+      return null;
+    }
+
+    clearInterval(this.feeds.get(id));
+
+    return deletedFeed;
+  }
+
   private startFeed(feed: RssFeed) {
     console.log(`Registering feed ${feed.url}`);
 
@@ -55,7 +71,7 @@ export class RssService implements BaseService {
 
     this.feeds.set(
       feed.id,
-      setInterval(() => this.checkFeed(feed), RssService.CHECK_INTERVAL)
+      setInterval(() => this.checkFeed(feed.id), RssService.CHECK_INTERVAL)
     );
   }
 
@@ -70,12 +86,18 @@ export class RssService implements BaseService {
     return new Date(dateStr);
   }
 
-  private async checkFeed(feed: RssFeed) {
+  private async checkFeed(feedId: string) {
+    const feed = await this.prisma.rssFeed.findUnique({
+      where: { id: feedId },
+    });
+
+    if (!feed) return;
+
     const channel = this.isla.getChannel(feed.syncFrontend, feed.syncChannel);
 
     const { items } = await this.parser.parseURL(feed.url);
     const newItems = items.filter((item) => {
-      return this.getPublishedDate(item) > feed.lastChecked;
+      return this.getPublishedDate(item).getTime() > feed.lastChecked.getTime();
     });
 
     for (const item of newItems) {

@@ -53,11 +53,7 @@ export default class RssCommand implements Command {
         return "Usage: rss remove <id>";
       }
 
-      const deletedFeed = await prisma.rssFeed
-        .delete({
-          where: { id },
-        })
-        .catch(() => null);
+      const deletedFeed = await rssService.removeFeed(id);
 
       if (!deletedFeed) {
         return `No RSS feed with id ${id}`;
