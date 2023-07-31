@@ -1,4 +1,4 @@
-FROM node:19-bullseye as builder
+FROM node:20-bullseye as builder
 WORKDIR /app
 RUN apt update -y && apt install -y docker libc6
 COPY package.json .
