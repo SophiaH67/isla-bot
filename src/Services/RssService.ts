@@ -110,9 +110,24 @@ export class RssService implements BaseService {
       await this.isla.sendMessage(channel, `${item.title} - ${item.link}`);
     }
 
+    // Update last checked
+    const oldestItem = items.reduce((prev, curr) => {
+      const prevDate = this.getPublishedDate(prev);
+      const currDate = this.getPublishedDate(curr);
+
+      return prevDate.getTime() < currDate.getTime() ? prev : curr;
+    });
+
+    if (!oldestItem) return;
+
+    if (
+      this.getPublishedDate(oldestItem).getTime() > feed.lastChecked.getTime()
+    )
+      return;
+
     await this.prisma.rssFeed.update({
       where: { id: feed.id },
-      data: { lastChecked: new Date() },
+      data: { lastChecked: this.getPublishedDate(oldestItem) },
     });
   }
 }
