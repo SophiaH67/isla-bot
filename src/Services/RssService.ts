@@ -103,17 +103,18 @@ export class RssService implements BaseService {
 
     const { items } = await this.parser.parseURL(feed.url);
 
-    // Cannot do it all at the same time, since prisma is an amazing piece of software!
-    // https://github.com/prisma/prisma/issues/11789
-    for (const item of items) {
-      const tracker = this.getTracker(item);
-      await this.prisma.rssFeedSeen.create({
-        data: {
-          tracker,
-          feed: { connect: { id: feedId } },
-        },
-      });
-    }
+    const promises = items
+      .map((item) => this.getTracker(item))
+      .map((tracker) =>
+        this.prisma.rssFeedSeen.create({
+          data: {
+            tracker,
+            feed: { connect: { id: feedId } },
+          },
+        })
+      );
+
+    await Promise.all(promises);
   }
 
   private async checkFeed(feedId: string) {

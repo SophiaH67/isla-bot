@@ -1,9 +1,0 @@
--- CreateTable
-CREATE TABLE "RssFeed" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "url" TEXT NOT NULL,
-    "syncChannel" TEXT NOT NULL,
-    "syncFrontend" TEXT NOT NULL,
-    "lastChecked" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
