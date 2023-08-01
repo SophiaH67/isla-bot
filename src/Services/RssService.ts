@@ -39,6 +39,8 @@ export class RssService implements BaseService {
       },
     });
 
+    await this.initializeFeed(feed.id);
+
     this.startFeed(feed);
 
     return feed;
@@ -81,15 +83,37 @@ export class RssService implements BaseService {
     );
   }
 
-  private getPublishedDate(item: Parser.Item) {
-    //@ts-expect-error - Weird typings, also thx github for using atom instead of xss
-    const dateStr = item.pubDate || item.isoDate || item.published;
+  private getTracker(item: Parser.Item) {
+    const tracker = item.guid || item.link || item.title;
 
-    if (!dateStr) {
-      return new Date(0);
+    if (!tracker) {
+      console.error("No tracker found for item", item);
+      throw new Error("No tracker found");
     }
 
-    return new Date(dateStr);
+    return tracker;
+  }
+
+  private async initializeFeed(feedId: string) {
+    const feed = await this.prisma.rssFeed.findUnique({
+      where: { id: feedId },
+    });
+
+    if (!feed) return;
+
+    const { items } = await this.parser.parseURL(feed.url);
+
+    // Cannot do it all at the same time, since prisma is an amazing piece of software!
+    // https://github.com/prisma/prisma/issues/11789
+    for (const item of items) {
+      const tracker = this.getTracker(item);
+      await this.prisma.rssFeedSeen.create({
+        data: {
+          tracker,
+          feed: { connect: { id: feedId } },
+        },
+      });
+    }
   }
 
   private async checkFeed(feedId: string) {
@@ -99,34 +123,49 @@ export class RssService implements BaseService {
 
     if (!feed) return;
 
+    // If there are no items, initialize the feed
+    const seenItems = await this.prisma.rssFeedSeen.count({
+      where: { feedId: feed.id },
+    });
+    if (seenItems === 0) {
+      console.warn(
+        `Feed ${feed.id} (${feed.url}) has no seen items, initializing`
+      );
+      await this.initializeFeed(feed.id);
+      return;
+    }
+
     const channel = this.isla.getChannel(feed.syncFrontend, feed.syncChannel);
 
-    const { items } = await this.parser.parseURL(feed.url);
-    const newItems = items
-      .filter((item) => {
-        return (
-          this.getPublishedDate(item).getTime() > feed.lastChecked.getTime()
-        );
-      })
-      // Oldest first
-      .sort((a, b) => {
-        return (
-          this.getPublishedDate(a).getTime() -
-          this.getPublishedDate(b).getTime()
-        );
-      });
+    const { items: allItems } = await this.parser.parseURL(feed.url);
+    // Filter out items we've already seen
+    const itemIndices = await Promise.all(
+      allItems.map((item) =>
+        this.prisma.rssFeedSeen.count({
+          where: {
+            feedId: feed.id,
+            tracker: this.getTracker(item),
+          },
+        })
+      )
+    );
+    const items = allItems
+      .filter((_, i) => itemIndices[i] === 0)
+      .sort(
+        (a, b) =>
+          new Date(a.isoDate || a.pubDate || a.date || 0).getTime() -
+          new Date(b.isoDate || b.pubDate || b.date || 0).getTime()
+      ); // Sort by date, oldest first
 
-    for (const item of newItems) {
+    for (const item of items) {
       await this.isla.sendMessage(channel, `${item.title} - ${item.link}`);
-      // Update last checked
-      const newTime = this.getPublishedDate(item);
-      if (newTime.getTime() > feed.lastChecked.getTime()) {
-        await this.prisma.rssFeed.update({
-          where: { id: feed.id },
-          data: { lastChecked: newTime },
-        });
-        feed.lastChecked = newTime; // Update local copy
-      }
+
+      await this.prisma.rssFeedSeen.create({
+        data: {
+          tracker: this.getTracker(item),
+          feed: { connect: { id: feed.id } },
+        },
+      });
     }
   }
 }

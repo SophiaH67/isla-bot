@@ -11,10 +11,19 @@ datasource db {
 }
 
 model RssFeed {
-  id           String   @id @default(uuid())
+  id           String        @id @default(uuid())
   url          String
   syncChannel  String
   syncFrontend String
-  lastChecked  DateTime @default(now())
-  createdAt    DateTime @default(now())
+  createdAt    DateTime      @default(now())
+  RssFeedSeen  RssFeedSeen[]
+}
+
+model RssFeedSeen {
+  tracker   String   @id // Whatever identifier we can use to identify the item
+  feedId    String
+  feed      RssFeed  @relation(fields: [feedId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([tracker, feedId])
 }
