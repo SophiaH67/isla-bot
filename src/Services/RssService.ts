@@ -71,7 +71,10 @@ export class RssService implements BaseService {
 
     this.feeds.set(
       feed.id,
-      setInterval(() => this.checkFeed(feed.id), RssService.CHECK_INTERVAL)
+      setInterval(
+        () => this.checkFeed(feed.id).catch(console.error),
+        RssService.CHECK_INTERVAL
+      )
     );
   }
 
