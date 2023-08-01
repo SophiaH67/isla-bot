@@ -102,32 +102,31 @@ export class RssService implements BaseService {
     const channel = this.isla.getChannel(feed.syncFrontend, feed.syncChannel);
 
     const { items } = await this.parser.parseURL(feed.url);
-    const newItems = items.filter((item) => {
-      return this.getPublishedDate(item).getTime() > feed.lastChecked.getTime();
-    });
+    const newItems = items
+      .filter((item) => {
+        return (
+          this.getPublishedDate(item).getTime() > feed.lastChecked.getTime()
+        );
+      })
+      // Oldest first
+      .sort((a, b) => {
+        return (
+          this.getPublishedDate(a).getTime() -
+          this.getPublishedDate(b).getTime()
+        );
+      });
 
     for (const item of newItems) {
       await this.isla.sendMessage(channel, `${item.title} - ${item.link}`);
+      // Update last checked
+      const newTime = this.getPublishedDate(item);
+      if (newTime.getTime() > feed.lastChecked.getTime()) {
+        await this.prisma.rssFeed.update({
+          where: { id: feed.id },
+          data: { lastChecked: newTime },
+        });
+        feed.lastChecked = newTime; // Update local copy
+      }
     }
-
-    // Update last checked
-    const oldestItem = items.reduce((prev, curr) => {
-      const prevDate = this.getPublishedDate(prev);
-      const currDate = this.getPublishedDate(curr);
-
-      return prevDate.getTime() < currDate.getTime() ? prev : curr;
-    });
-
-    if (!oldestItem) return;
-
-    if (
-      this.getPublishedDate(oldestItem).getTime() > feed.lastChecked.getTime()
-    )
-      return;
-
-    await this.prisma.rssFeed.update({
-      where: { id: feed.id },
-      data: { lastChecked: this.getPublishedDate(oldestItem) },
-    });
   }
 }
