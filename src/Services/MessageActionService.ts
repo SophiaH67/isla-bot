@@ -24,7 +24,11 @@ export class MessageActionService implements BaseService {
 
     for (const action of actions) {
       try {
-        eval(action.script);
+        const actionPromise = eval(`(async () => {
+          ${action.script}
+          })()`);
+
+        await actionPromise;
       } catch (e) {
         message.reply(`Failed to execute message action: ${e}`);
       }
