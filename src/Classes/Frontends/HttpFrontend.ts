@@ -39,6 +39,9 @@ export default class HttpFrontend extends BaseFrontend {
         async (content) => {
           res.write(content);
         },
+        async () => {
+          res.status(400).send("Your message was deleted");
+        },
         user,
         uuid(),
         new IslaChannel("http", this)

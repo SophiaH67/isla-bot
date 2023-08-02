@@ -178,6 +178,10 @@ export default class MatrixFrontend extends BaseFrontend {
       return this.messageEventToIslaMessage(roomId, chatEvent);
     };
 
+    const remove = async () => {
+      await this.client?.redactEvent(roomId, event.event_id);
+    };
+
     const user = await this.client?.getUserProfile(event.sender);
 
     const author = new IslaUser(event.sender, user?.displayname || "Unknown");
@@ -191,6 +195,7 @@ export default class MatrixFrontend extends BaseFrontend {
       this.isla,
       event.content.body,
       reply,
+      remove,
       author,
       event.event_id,
       new IslaChannel(roomId, this),

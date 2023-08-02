@@ -62,6 +62,9 @@ export default class WebsocketFrontend extends BaseFrontend {
           async (content) => {
             socket.emit("broadcast", content);
           },
+          async () => {
+            socket.emit("broadcast", "Message deleted");
+          },
           userAuthor,
           uuid(),
           new IslaChannel(socket.id, this)

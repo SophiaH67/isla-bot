@@ -35,6 +35,9 @@ export default class CLIFrontend extends BaseFrontend {
         async (content) => {
           console.log(`[Isla] ${content}`);
         },
+        async () => {
+          console.log(`[Isla] Message deleted`);
+        },
         this.userAuthor,
         uuid(),
         new IslaChannel("cli", this)

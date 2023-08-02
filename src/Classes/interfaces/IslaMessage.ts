@@ -19,6 +19,7 @@ export class IslaMessage {
       content: string,
       replyOptions?: ReplyOptions
     ) => Promise<IslaMessage | void>,
+    public readonly remove: () => Promise<void>,
     public readonly author: IslaUser,
     public readonly id: string,
     public readonly channel: IslaChannel,
