@@ -19,6 +19,7 @@ import TwitterEmbedService from "../Services/TwitterEmbedService";
 import { PrismaService } from "../Services/PrismaService";
 import { RssService } from "../Services/RssService";
 import { IslaChannel } from "./interfaces/IslaChannel";
+import { MessageActionService } from "../Services/MessageActionService";
 
 export default class Isla {
   public redis = createClient({
@@ -70,6 +71,7 @@ export default class Isla {
       new CommandService(),
       new ConversationManagerService(),
       new TwitterEmbedService(),
+      new MessageActionService(),
     ];
   }
 

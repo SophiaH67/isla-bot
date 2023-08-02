@@ -27,3 +27,15 @@ model RssFeedSeen {
 
   @@unique([tracker, feedId])
 }
+
+model MessageAction {
+  name   String @id
+  script String
+
+  channel  String
+  frontend String
+
+  createdAt DateTime @default(now())
+
+  @@unique([name, channel, frontend])
+}
