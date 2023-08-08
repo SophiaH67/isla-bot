@@ -43,6 +43,9 @@ model MessageAction {
 model Message {
   id String @id
 
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
   channel  String
   frontend String
 
@@ -51,4 +54,15 @@ model Message {
   createdAt DateTime @default(now())
 
   @@unique([channel, frontend, id])
+}
+
+model User {
+  id        String    @id
+  name      String
+  frontend  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Message   Message[]
+
+  @@unique([id, frontend])
 }
