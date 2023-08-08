@@ -21,7 +21,7 @@ export class MessageLoggerService implements BaseService {
   }
 
   private async handleMessage(message: IslaMessage): Promise<void> {
-    const author = await this.prisma.user.upsert({
+    const author = await this.prisma.loggedUser.upsert({
       where: {
         id: message.author.id,
       },
@@ -35,7 +35,7 @@ export class MessageLoggerService implements BaseService {
       },
     });
 
-    await this.prisma.message.upsert({
+    await this.prisma.loggedMessage.upsert({
       where: {
         id: message.id,
         channel: message.channel.id,

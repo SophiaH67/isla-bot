@@ -40,10 +40,10 @@ model MessageAction {
   @@unique([name, channel, frontend])
 }
 
-model Message {
+model LoggedMessage {
   id String @id
 
-  author   User   @relation(fields: [authorId], references: [id])
+  author   LoggedUser @relation(fields: [authorId], references: [id])
   authorId String
 
   channel  String
@@ -56,13 +56,13 @@ model Message {
   @@unique([channel, frontend, id])
 }
 
-model User {
-  id        String    @id
+model LoggedUser {
+  id        String          @id
   name      String
   frontend  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Message   Message[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  Message   LoggedMessage[]
 
   @@unique([id, frontend])
 }
