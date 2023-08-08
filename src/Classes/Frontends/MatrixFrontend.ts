@@ -71,7 +71,6 @@ export default class MatrixFrontend extends BaseFrontend {
 
     // Don't handle unhelpful events (ones that aren't text messages, are redacted, or sent by us)
     if (!("content" in event)) return;
-    if (event["sender"] === (await this.client.getUserId())) return; // Ignore our own messages
 
     // Figure out what type of event it is
     switch (event["type"]) {
@@ -192,7 +191,11 @@ export default class MatrixFrontend extends BaseFrontend {
 
     const user = await this.client?.getUserProfile(event.sender);
 
-    const author = new IslaUser(event.sender, user?.displayname || "Unknown");
+    const author = new IslaUser(
+      event.sender,
+      user?.displayname || "Unknown",
+      event["sender"] === (await this.client!.getUserId())
+    );
 
     const replyId: string | undefined =
       "event_id" in (event.content?.["m.relates_to"]?.["m.in_reply_to"] || {})

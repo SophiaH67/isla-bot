@@ -53,7 +53,11 @@ export default class WebsocketFrontend extends BaseFrontend {
     server.listen(1514);
 
     this.io.on("connection", (socket) => {
-      const userAuthor = new IslaUser("websocket-" + socket.id, socket.id);
+      const userAuthor = new IslaUser(
+        "websocket-" + socket.id,
+        socket.id,
+        false
+      );
 
       socket.on("command", async (command) => {
         const message: IslaMessage = new IslaMessage(

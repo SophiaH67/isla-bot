@@ -7,13 +7,14 @@ export default class ConversationManagerService extends BaseService {
 
   public addToOrNewConversation(message: IslaMessage): Conversation {
     const conversation = this.getOrCreateConversation(message);
+    this.conversations[message.id] = conversation;
     conversation.addMessage(message);
     return conversation;
   }
 
   public getOrCreateConversation(message: IslaMessage): Conversation {
     const conversation = this.conversations[message.replyTo?.id || ""];
-    if (conversation && conversation.isWaitingForReply()) {
+    if (conversation) {
       return conversation;
     }
 

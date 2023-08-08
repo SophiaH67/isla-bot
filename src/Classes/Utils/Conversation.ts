@@ -24,6 +24,10 @@ export default class Conversation {
     if (this.isWaitingForReply()) this.directives.pop(); // Remove 'Also' directive
 
     this.messages.push(message);
+
+    // If the message is sent by us, we don't need to parse it
+    if (message.author.isIsla) return;
+
     // Parse the message content for directives
     // Split on double newlines as basic message splitting
     const parts = message.content.split(/\n\n/g);
@@ -45,13 +49,20 @@ export default class Conversation {
   }
 
   public async executeDirectives() {
-    const unfilteredAnswers = await Promise.all(
-      this.directives.map((directive) =>
-        this.isla.directiveHandler
-          .handleDirective(this, directive)
-          .then((answer) => this.isla.transformMessage(answer))
-      )
-    );
+    const unfilteredAnswerPromises = [];
+
+    let directive: string | undefined;
+
+    while ((directive = this.directives.pop())) {
+      const answerPromise = this.isla.directiveHandler
+        .handleDirective(this, directive)
+        .then((answer) => this.isla.transformMessage(answer));
+
+      unfilteredAnswerPromises.push(answerPromise);
+    }
+
+    const unfilteredAnswers = await Promise.all(unfilteredAnswerPromises);
+
     // Remove undefined answers
     let answers = unfilteredAnswers.filter(Boolean) as string[];
     // Remove empty answers
@@ -83,7 +94,7 @@ export default class Conversation {
 
   public async writeRaw(chunk: string, last = false) {
     let replyMessage = this.messages.reverse().find((message) => {
-      return message.isIsla;
+      return message.author.isIsla;
     });
 
     if (!replyMessage) replyMessage = this.reference;

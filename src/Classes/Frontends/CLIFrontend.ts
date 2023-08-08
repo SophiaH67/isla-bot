@@ -7,7 +7,7 @@ import { uuid } from "uuidv4";
 import { IslaChannel } from "../interfaces/IslaChannel";
 
 export default class CLIFrontend extends BaseFrontend {
-  private userAuthor = new IslaUser("cli-user", "Marni");
+  private userAuthor = new IslaUser("cli-user", "Marni", false);
 
   constructor(private readonly isla: Isla) {
     super();

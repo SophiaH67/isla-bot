@@ -11,7 +11,6 @@ export interface ReplyOptions {
 }
 
 export class IslaMessage {
-  public isIsla = false;
   constructor(
     public readonly isla: Isla,
     public readonly content: string,
