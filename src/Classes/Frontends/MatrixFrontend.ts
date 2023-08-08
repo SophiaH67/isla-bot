@@ -76,7 +76,9 @@ export default class MatrixFrontend extends BaseFrontend {
     // Figure out what type of event it is
     switch (event["type"]) {
       case "m.room.message":
-        await this.handleMessage(roomId, event);
+        if ("m.new_content" in event.content)
+          await this.handleMessageUpdate(roomId, event);
+        else await this.handleMessage(roomId, event);
         break;
       case "m.room.member":
         console.debug(
@@ -93,11 +95,17 @@ export default class MatrixFrontend extends BaseFrontend {
     roomId: string,
     event: MatrixChatEvent
   ): Promise<IslaMessage> {
+    const isReplace = event.content["m.relates_to"]?.rel_type === "m.replace";
+    const messageId =
+      isReplace && event.content["m.relates_to"]?.event_id
+        ? event.content["m.relates_to"]?.event_id
+        : event.event_id;
+
     const reply = async (message: string, options: ReplyOptions = {}) => {
       const threadId =
         (event.content["m.relates_to"]?.rel_type === "m.thread" &&
           event.content["m.relates_to"]?.event_id) ||
-        (options.forceThread && event.event_id);
+        (options.forceThread && messageId);
 
       const platformNativeReply = options.platformNativeReply ?? true;
 
@@ -109,7 +117,7 @@ export default class MatrixFrontend extends BaseFrontend {
         "m.relates_to": {
           ...(platformNativeReply && {
             "m.in_reply_to": {
-              event_id: event.event_id,
+              event_id: messageId,
             },
           }),
           ...(threadId && {
@@ -179,7 +187,7 @@ export default class MatrixFrontend extends BaseFrontend {
     };
 
     const remove = async () => {
-      await this.client?.redactEvent(roomId, event.event_id);
+      await this.client?.redactEvent(roomId, messageId);
     };
 
     const user = await this.client?.getUserProfile(event.sender);
@@ -193,11 +201,13 @@ export default class MatrixFrontend extends BaseFrontend {
 
     const message = new IslaMessage(
       this.isla,
-      event.content.body,
+      isReplace && event.content["m.new_content"]
+        ? event.content["m.new_content"].body
+        : event.content.body,
       reply,
       remove,
       author,
-      event.event_id,
+      messageId,
       new IslaChannel(roomId, this),
       replyId ? { id: replyId } : undefined
     );
@@ -212,6 +222,15 @@ export default class MatrixFrontend extends BaseFrontend {
     const message = await this.messageEventToIslaMessage(roomId, event);
 
     await this.isla.onMessage(message);
+  }
+
+  public async handleMessageUpdate(
+    roomId: string,
+    event: MatrixChatEvent
+  ): Promise<void> {
+    const message = await this.messageEventToIslaMessage(roomId, event);
+
+    await this.isla.onMessageUpdate(message);
   }
 
   public async sendMessage(channelId: string, message: string): Promise<void> {

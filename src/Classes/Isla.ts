@@ -20,6 +20,7 @@ import { PrismaService } from "../Services/PrismaService";
 import { RssService } from "../Services/RssService";
 import { IslaChannel } from "./interfaces/IslaChannel";
 import { MessageActionService } from "../Services/MessageActionService";
+import { MessageLoggerService } from "../Services/MessageLoggerService";
 
 export default class Isla {
   public redis = createClient({
@@ -67,6 +68,7 @@ export default class Isla {
     // Load services
     this.services = [
       new PrismaService(),
+      new MessageLoggerService(),
       new RssService(),
       new CommandService(),
       new ConversationManagerService(),
@@ -95,6 +97,10 @@ export default class Isla {
 
   async onMessage(msg: IslaMessage) {
     this.services.forEach((service) => service.onMessage?.(msg));
+  }
+
+  async onMessageUpdate(msg: IslaMessage) {
+    this.services.forEach((service) => service.onMessageUpdate?.(msg));
   }
 
   public getService<T extends BaseService>(service: string | (new () => T)): T {

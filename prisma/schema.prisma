@@ -39,3 +39,16 @@ model MessageAction {
 
   @@unique([name, channel, frontend])
 }
+
+model Message {
+  id String @id
+
+  channel  String
+  frontend String
+
+  content   String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([channel, frontend, id])
+}

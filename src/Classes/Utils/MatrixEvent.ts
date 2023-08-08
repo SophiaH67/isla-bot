@@ -10,8 +10,12 @@ export interface MatrixChatEvent {
         event_id?: string;
       };
 
-      "rel_type"?: "m.thread";
-      "event_id"?: string;
+      rel_type?: "m.thread" | "m.replace";
+      event_id?: string;
+    };
+    "m.new_content"?: {
+      msgtype: "m.text";
+      body: string;
     };
   };
   sender: string;
