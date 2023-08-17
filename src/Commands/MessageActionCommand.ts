@@ -7,7 +7,7 @@ export default class MessageActionCommand implements Command {
   public name = "message-action";
   public aliases: string[] = [
     "message-actions",
-    "ma",
+    "message-action",
     "messageaction",
     "messageactions",
   ];
