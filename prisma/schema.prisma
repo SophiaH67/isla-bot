@@ -20,12 +20,12 @@ model RssFeed {
 }
 
 model RssFeedSeen {
-  tracker   String   @id // Whatever identifier we can use to identify the item
+  tracker   String // Whatever identifier we can use to identify the item
   feedId    String
   feed      RssFeed  @relation(fields: [feedId], references: [id])
   createdAt DateTime @default(now())
 
-  @@unique([tracker, feedId])
+  @@id([tracker, feedId])
 }
 
 model MessageAction {
