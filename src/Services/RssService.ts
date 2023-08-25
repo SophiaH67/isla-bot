@@ -50,6 +50,7 @@ export class RssService implements BaseService {
     const deletedFeed = await this.prisma.rssFeed
       .delete({
         where: { id },
+        include: { RssFeedSeen: true },
       })
       .catch(() => null);
 

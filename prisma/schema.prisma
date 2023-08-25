@@ -22,7 +22,7 @@ model RssFeed {
 model RssFeedSeen {
   tracker   String // Whatever identifier we can use to identify the item
   feedId    String
-  feed      RssFeed  @relation(fields: [feedId], references: [id])
+  feed      RssFeed  @relation(fields: [feedId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@id([tracker, feedId])
