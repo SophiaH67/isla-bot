@@ -334,4 +334,10 @@ export default class MatrixFrontend extends BaseFrontend {
 
     this.currentMoodProfile = this.isla.moodManager.mood;
   }
+
+  public async subscribe(...args: Parameters<MatrixClient["on"]>) {
+    if (!this.client) throw new Error("Matrix client not initialised");
+
+    return this.client.on(...args);
+  }
 }
