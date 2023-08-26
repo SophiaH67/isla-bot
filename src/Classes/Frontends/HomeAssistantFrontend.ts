@@ -1,4 +1,3 @@
-import Protocol from "../protocol/Protocol";
 import HomeAssistant from "../Utils/HomeAssistant";
 import BaseFrontend from "./BaseFrontend";
 
@@ -12,21 +11,5 @@ export default class HomeAssistantFrontend extends BaseFrontend {
 
   public async broadcast(message: string) {
     await this.hass.sayTts(message, "media_player.marnix_room_speaker");
-  }
-
-  public async setProtocol(protocol: Protocol) {
-    switch (protocol) {
-      case Protocol.Standard:
-        await this.hass.activateScene("scene.marnix_normal");
-        break;
-      case Protocol.Safety:
-        await this.hass.activateScene("scene.marnix_alarm");
-        break;
-      case Protocol.Emergency:
-        await this.hass.activateScene("scene.marnix_emergency");
-        break;
-    }
-
-    await this.broadcast(`Protocol has been set to ${protocol}`);
   }
 }

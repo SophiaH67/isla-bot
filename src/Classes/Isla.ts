@@ -1,7 +1,6 @@
 import assert from "assert";
 import BaseFrontend from "./Frontends/BaseFrontend";
 import MoodManager from "./mood/MoodManager";
-import ProtocolManager from "./protocol/ProtocolManager";
 import { createClient } from "redis";
 import DirectiveHandler from "./Utils/DirectiveHandler";
 import ConversationManagerService from "../Services/ConversationManagerService";
@@ -31,10 +30,8 @@ export default class Isla {
   public conversationManager = new ConversationManagerService();
   public directiveHandler = new DirectiveHandler(this);
 
-  public frontends: BaseFrontend[];
   private services: BaseService[];
   public moodManager: MoodManager;
-  public protocolManager: ProtocolManager;
 
   public async transformMessage(message: string): Promise<string>;
   public async transformMessage(message: undefined): Promise<undefined>;
@@ -50,20 +47,8 @@ export default class Isla {
 
   constructor() {
     this.moodManager = new MoodManager(this);
-    this.protocolManager = new ProtocolManager(this);
 
     assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
-
-    // Load frontends
-    this.frontends = [
-      new DiscordFrontend(this),
-      new CLIFrontend(this),
-      new JoinFrontend(this),
-      new WebsocketFrontend(this),
-      new HttpFrontend(this),
-      new HomeAssistantFrontend(),
-      new MatrixFrontend(this),
-    ];
 
     // Load services
     this.services = [
@@ -74,13 +59,16 @@ export default class Isla {
       new ConversationManagerService(),
       new TwitterEmbedService(),
       new MessageActionService(),
-    ];
-  }
 
-  public async broadcast(message: string) {
-    await Promise.all(
-      this.frontends.map((frontend) => frontend.broadcast(message))
-    );
+      // Frontends
+      new DiscordFrontend(this),
+      new CLIFrontend(this),
+      new JoinFrontend(this),
+      new WebsocketFrontend(this),
+      new HttpFrontend(this),
+      new HomeAssistantFrontend(),
+      new MatrixFrontend(this),
+    ];
   }
 
   public async start(): Promise<void> {
@@ -91,8 +79,6 @@ export default class Isla {
 
     // Start services
     await Promise.all(this.services.map((service) => service.onReady?.(this)));
-
-    this.frontends.forEach((frontend) => frontend.start());
   }
 
   async onMessage(msg: IslaMessage) {
@@ -118,15 +104,14 @@ export default class Isla {
   }
 
   public getFrontend(frontendName: string): BaseFrontend {
-    const frontend = this.frontends.find(
-      (frontend) => frontend.constructor.name === frontendName
-    );
+    const service = this.getService(frontendName);
 
-    if (!frontend) {
-      throw new Error(`Frontend ${frontendName} not found`);
+    // Check if service is a frontend
+    if (!(service instanceof BaseFrontend)) {
+      throw new Error(`${frontendName} is not a frontend`);
     }
 
-    return frontend;
+    return service;
   }
 
   public getChannel(frontendName: string, channelId: string): IslaChannel {

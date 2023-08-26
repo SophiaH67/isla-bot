@@ -1,6 +1,5 @@
 import BaseFrontend from "./BaseFrontend";
 import Isla from "../Isla";
-import Protocol from "../protocol/Protocol";
 import { Client, Intents } from "discord.js";
 
 export default class DiscordFrontend extends BaseFrontend {
@@ -32,31 +31,6 @@ export default class DiscordFrontend extends BaseFrontend {
       throw new Error("Channel is not a text channel");
     }
     await channel.send(message);
-  }
-
-  public async setProtocol(protocol: Protocol): Promise<void> {
-    switch (protocol) {
-      case Protocol.Standard:
-        this.bot.user?.setStatus("online");
-        this.bot.user?.setPresence({
-          activities: [],
-        });
-        break;
-      case Protocol.Safety:
-        this.bot.user?.setStatus("idle");
-        this.bot.user?.setActivity({
-          name: "Safety Protocol",
-          type: "PLAYING",
-        });
-        break;
-      case Protocol.Emergency:
-        this.bot.user?.setStatus("dnd");
-        this.bot.user?.setActivity({
-          name: "Emergency Protocol",
-          type: "PLAYING",
-        });
-        break;
-    }
   }
 
   public async start(): Promise<void> {
