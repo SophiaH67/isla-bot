@@ -1,7 +1,7 @@
 import { BaseService } from "./BaseService";
 import Isla from "../Classes/Isla";
 import { PrismaService } from "./PrismaService";
-import { RssFeed } from "@prisma/client";
+import { RssFeed, Prisma } from "@prisma/client";
 import Parser from "rss-parser";
 
 export class RssService implements BaseService {
@@ -52,10 +52,17 @@ export class RssService implements BaseService {
         where: { id },
         include: { RssFeedSeen: true },
       })
-      .catch(() => null);
+      .catch((e) => e as Error);
 
-    if (!deletedFeed) {
+    if (
+      deletedFeed instanceof Prisma.PrismaClientKnownRequestError &&
+      deletedFeed.code === "P2025"
+    ) {
       return null;
+    }
+
+    if (deletedFeed instanceof Error) {
+      throw deletedFeed;
     }
 
     clearInterval(this.feeds.get(id));
