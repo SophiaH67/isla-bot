@@ -27,7 +27,6 @@ export default class Isla {
       ? `redis://${process.env.REDIS_HOST}`
       : "redis://localhost",
   });
-  public conversationManager = new ConversationManagerService();
   public directiveHandler = new DirectiveHandler(this);
 
   private services: BaseService[];
