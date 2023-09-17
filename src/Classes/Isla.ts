@@ -42,7 +42,9 @@ export default class Isla {
     if (!message) {
       return undefined;
     }
-    return await this.moodManager.transformMessage(message);
+    return await this.moodManager
+      .transformMessage(message)
+      .catch(() => message);
   }
 
   constructor() {
