@@ -8,10 +8,15 @@ export default class ShellCommand implements Command {
   public aliases = ["eval "];
 
   @AdminGuard
-  public async run(conversation: Conversation, args: string[]): Promise<string> {
-    const script = args.join(" ")
+  public async run(
+    _conversation: Conversation,
+    args: string[]
+  ): Promise<string> {
+    const script = args.join(" ");
 
-    const actionPromise = eval(`(async () => ${script})()`).catch(e => e.toString()).catch(e => 'An unknown error occurred');
+    const actionPromise = eval(`(async () => ${script})()`)
+      .catch((e: Error) => e.toString())
+      .catch((_e: Error) => "An unknown error occurred");
 
     return await actionPromise;
   }
