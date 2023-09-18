@@ -54,7 +54,7 @@ class DataSpooler {
 export default class ShellCommand implements Command {
   public description = "Execute a shell command";
   public usage = "shell <command>";
-  public aliases = ["shell ", "sh ", "!", "eval "];
+  public aliases = ["shell ", "sh ", "!"];
 
   @AdminGuard
   public run(conversation: Conversation, args: string[]): Promise<string> {
