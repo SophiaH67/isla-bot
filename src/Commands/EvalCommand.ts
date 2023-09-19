@@ -12,9 +12,10 @@ export default class ShellCommand implements Command {
     _conversation: Conversation,
     args: string[]
   ): Promise<string> {
-    const script = args.join(" ");
+    const script = args.slice(1).join(" ");
 
     const actionPromise = eval(`(async () => ${script})()`)
+      .then((result: unknown) => "" + result)
       .catch((e: Error) => e.toString())
       .catch((_e: Error) => "An unknown error occurred");
 

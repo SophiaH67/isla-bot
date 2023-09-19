@@ -1,6 +1,5 @@
 import assert from "assert";
 import fetch from "node-fetch";
-import Isla from "../Isla";
 
 interface JoinResponse {
   success: boolean;
@@ -51,8 +50,6 @@ export default class Join {
   private apiKey: string =
     process.env.JOIN_KEY || assert.fail("JOIN_KEY is required");
 
-  constructor(private isla: Isla) {}
-
   public constructURL(endpoint: string, params: any = {}): string {
     params.apikey = this.apiKey;
     const query = Object.keys(params)
@@ -68,14 +65,16 @@ export default class Join {
     return JSON.parse(responseText);
   }
 
-  public async sendNotification(text: string): Promise<JoinResponse> {
+  public async sendNotification(
+    text: string,
+    tts = false
+  ): Promise<JoinResponse> {
     const response = await this.sendPush({
-      title: await this.isla.moodManager.transformMessage(
-        "I have a message for you"
-      ),
+      title: "Isla",
       text,
       icon: "https://cdn.discordapp.com/avatars/952582449437765632/909c5696487bcbd697eb8c468af48f5a.webp?",
       deviceId: "group.all",
+      say: tts ? text : undefined,
     });
     return response;
   }

@@ -22,6 +22,7 @@ import { MessageActionService } from "../Services/MessageActionService";
 import { MessageLoggerService } from "../Services/MessageLoggerService";
 import MqttService from "../Services/MqttService";
 import LoggingService from "../Services/LoggingService";
+import ProtocolService from "../Services/ProtocolService";
 
 export default class Isla {
   public redis = createClient({
@@ -57,6 +58,7 @@ export default class Isla {
     this.services = [
       new MqttService(),
       new LoggingService(),
+      new ProtocolService(),
       new PrismaService(),
       new MessageLoggerService(),
       new RssService(),
@@ -68,7 +70,7 @@ export default class Isla {
       // Frontends
       new DiscordFrontend(this),
       new CLIFrontend(this),
-      new JoinFrontend(this),
+      new JoinFrontend(),
       new WebsocketFrontend(this),
       new HttpFrontend(this),
       new HomeAssistantFrontend(),
@@ -94,7 +96,9 @@ export default class Isla {
     this.services.forEach((service) => service.onMessageUpdate?.(msg));
   }
 
-  public getService<T extends BaseService>(service: string | (new () => T)): T {
+  public getService<T extends BaseService>(
+    service: string | (new () => T) | (new (isla: Isla) => T)
+  ): T {
     const serviceName = typeof service === "string" ? service : service.name;
     const serviceInstance = this.services.find(
       (service) =>
