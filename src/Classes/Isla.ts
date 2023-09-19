@@ -76,6 +76,15 @@ export default class Isla {
       new HomeAssistantFrontend(),
       new MatrixFrontend(this),
     ];
+
+    process.on("uncaughtException", this.onError.bind(this));
+    process.on("unhandledRejection", this.onError.bind(this));
+  }
+
+  private onError(error: Error) {
+    const logger = this.getService(LoggingService).getLogger("Isla");
+    logger.error("An uncaught exception occurred");
+    logger.debug(error.stack ?? error.message ?? "No stack trace available");
   }
 
   public async start(): Promise<void> {
