@@ -14,6 +14,7 @@ enum Severity {
 
 interface LogMessage {
   message: string;
+  reportToPilot: boolean;
   context?: string;
 }
 
@@ -42,13 +43,15 @@ export class Logger {
   ) {}
 
   private async _log(message: string, severity: Severity) {
-    const logMessage: LogMessage = {
-      message,
-      context: this.context,
-    };
-
     const currentProtocol = this.protocolService.getProtocol();
     const minimumLogLevel = minimumLogLevelPerProtocol[currentProtocol];
+    const reportToPilot = isSeverityAtLeast(severity, minimumLogLevel);
+
+    const logMessage: LogMessage = {
+      message,
+      reportToPilot,
+      context: this.context,
+    };
 
     // Always log to console and MQTT
     console.log(`[${this.context}/${severity}] ${message}`);
@@ -58,7 +61,7 @@ export class Logger {
       JSON.stringify(logMessage)
     );
 
-    if (isSeverityAtLeast(severity, minimumLogLevel)) {
+    if (reportToPilot) {
       this.joinFrontend.broadcast(message);
     }
   }
