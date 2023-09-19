@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
   }
 }
