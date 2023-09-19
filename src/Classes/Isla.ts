@@ -20,6 +20,8 @@ import { RssService } from "../Services/RssService";
 import { IslaChannel } from "./interfaces/IslaChannel";
 import { MessageActionService } from "../Services/MessageActionService";
 import { MessageLoggerService } from "../Services/MessageLoggerService";
+import MqttService from "../Services/MqttService";
+import LoggingService from "../Services/LoggingService";
 
 export default class Isla {
   public redis = createClient({
@@ -53,6 +55,8 @@ export default class Isla {
 
     // Load services
     this.services = [
+      new MqttService(),
+      new LoggingService(),
       new PrismaService(),
       new MessageLoggerService(),
       new RssService(),
