@@ -83,7 +83,9 @@ export default class Isla {
     console.log(`${Isla.name} is ready!, database ping: ${ping}`);
 
     // Start services
-    await Promise.all(this.services.map((service) => service.onReady?.(this)));
+    for (const service of this.services) {
+      await service.start?.();
+    }
   }
 
   async onMessage(msg: IslaMessage) {
@@ -95,7 +97,7 @@ export default class Isla {
   }
 
   public getService<T extends BaseService>(
-    service: string | (new () => T) | (new (isla: Isla) => T)
+    service: string | (new (...args: any[]) => T)
   ): T {
     const serviceName = typeof service === "string" ? service : service.name;
     const serviceInstance = this.services.find(
@@ -135,18 +137,22 @@ export default class Isla {
 
   private registerServices(): void {
     this.registerService(new MqttService());
-    this.registerService(new LoggingService());
-    this.registerService(new ProtocolService());
-    this.registerService(new UnexpectedRestartService());
+
+    this.registerService(new LoggingService(this.getService(MqttService), this));
+    this.registerService(new ProtocolService(this.getService(LoggingService)));
+    this.registerService(new UnexpectedRestartService(this.getService(ProtocolService), this.getService(LoggingService), this.redis));
+
     this.registerService(new PrismaService());
-    this.registerService(new MessageLoggerService());
-    this.registerService(new RssService());
+    this.registerService(new MessageLoggerService(this.getService(PrismaService)));
+    this.registerService(new RssService(this.getService(PrismaService), this));
+    this.registerService(new MessageActionService(this.getService(PrismaService)));
+    
+    this.registerService(new TwitterEmbedService());
     this.registerService(new CommandService());
     this.registerService(new ConversationManagerService());
-    this.registerService(new TwitterEmbedService());
-    this.registerService(new MessageActionService());
+
     // Frontends
-    this.registerService(new DiscordFrontend(this));
+    this.registerService(new DiscordFrontend());
     this.registerService(new CLIFrontend(this));
     this.registerService(new JoinFrontend());
     this.registerService(new WebsocketFrontend(this));

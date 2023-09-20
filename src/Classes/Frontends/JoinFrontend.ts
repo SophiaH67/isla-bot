@@ -11,6 +11,7 @@ export default class JoinFrontend extends BaseFrontend {
   }
 
   public async broadcast(message: string) {
+    console.log("Broadcasting to Join: " + message);
     await this.join.sendNotification(message, true);
     return;
   }

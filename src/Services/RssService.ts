@@ -1,5 +1,5 @@
-import { BaseService } from "./BaseService";
 import Isla from "../Classes/Isla";
+import { BaseService } from "./BaseService";
 import { PrismaService } from "./PrismaService";
 import { RssFeed, Prisma } from "@prisma/client";
 import Parser from "rss-parser";
@@ -8,19 +8,17 @@ export class RssService implements BaseService {
   private static CHECK_INTERVAL = 1000 * 60 * 1;
 
   private parser: Parser;
-  private prisma!: PrismaService;
-  private isla!: Isla;
   private feeds: Map<string, NodeJS.Timeout>;
 
-  constructor() {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly isla: Isla
+  ) {
     this.parser = new Parser();
     this.feeds = new Map();
   }
 
-  public async onReady(isla: Isla): Promise<void> {
-    this.isla = isla;
-    this.prisma = this.isla.getService<PrismaService>(PrismaService);
-
+  public async start(): Promise<void> {
     for (const feed of await this.prisma.rssFeed.findMany()) {
       this.startFeed(feed);
     }

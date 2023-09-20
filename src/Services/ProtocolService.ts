@@ -1,4 +1,3 @@
-import Isla from "src/Classes/Isla";
 import { BaseService } from "./BaseService";
 import LoggingService, { Logger } from "./LoggingService";
 
@@ -35,13 +34,8 @@ export default class ProtocolService implements BaseService {
   private _protocolTimeout: NodeJS.Timeout | undefined;
   logger!: Logger;
 
-  onReady(isla: Isla): Promise<void> {
-    const loggingService = isla.getService(LoggingService);
+  constructor(loggingService: LoggingService) {
     this.logger = loggingService.getLogger(ProtocolService.name);
-
-    this.logger.debug("Protocol service is ready");
-
-    return Promise.resolve();
   }
 
   public getProtocol(): Protocol {

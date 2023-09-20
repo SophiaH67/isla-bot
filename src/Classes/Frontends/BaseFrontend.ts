@@ -1,5 +1,4 @@
 import { BaseService } from "../../Services/BaseService";
-import Isla from "../Isla";
 
 export default abstract class BaseFrontend implements BaseService {
   public async broadcast(_message: string): Promise<void> {}
@@ -8,8 +7,4 @@ export default abstract class BaseFrontend implements BaseService {
     _channelId: string,
     _message: string
   ): Promise<void> {}
-
-  public async onReady(_isla: Isla): Promise<void> {
-    await this.start();
-  }
 }

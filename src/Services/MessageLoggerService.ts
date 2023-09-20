@@ -1,16 +1,9 @@
 import { IslaMessage } from "../Classes/interfaces/IslaMessage";
-import Isla from "../Classes/Isla";
 import { BaseService } from "./BaseService";
 import { PrismaService } from "./PrismaService";
 
 export class MessageLoggerService implements BaseService {
-  private prisma!: PrismaService;
-  private isla!: Isla;
-
-  async onReady(_isla: Isla): Promise<void> {
-    this.isla = _isla;
-    this.prisma = this.isla.getService(PrismaService);
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async onMessage(message: IslaMessage): Promise<void> {
     return this.handleMessage(message);

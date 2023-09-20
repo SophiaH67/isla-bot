@@ -9,7 +9,7 @@ enum IslaStatus {
 export default class MqttService implements BaseService {
   public mqttClient!: mqtt.MqttClient;
 
-  onReady(): Promise<void> {
+  constructor() {
     console.log("Connecting to MQTT");
     this.mqttClient = mqtt.connect(`mqtt://${process.env.MQTT_HOST}`, {
       will: {
@@ -20,9 +20,9 @@ export default class MqttService implements BaseService {
     this.mqttClient.on("connect", () => {
       console.log("Connected to MQTT");
     });
+  }
 
+  async start(): Promise<void> {
     this.mqttClient.publish("isla/status", IslaStatus.ONLINE.toString());
-
-    return Promise.resolve();
   }
 }

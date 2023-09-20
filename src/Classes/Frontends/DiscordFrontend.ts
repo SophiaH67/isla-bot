@@ -1,5 +1,4 @@
 import BaseFrontend from "./BaseFrontend";
-import Isla from "../Isla";
 import { Client, Intents } from "discord.js";
 
 export default class DiscordFrontend extends BaseFrontend {
@@ -18,7 +17,7 @@ export default class DiscordFrontend extends BaseFrontend {
     ],
   });
 
-  constructor(public isla: Isla) {
+  constructor() {
     super();
   }
 

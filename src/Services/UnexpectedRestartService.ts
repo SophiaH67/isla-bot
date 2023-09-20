@@ -1,20 +1,23 @@
 import { createClient } from "redis";
 import { BaseService } from "./BaseService";
-import Isla from "src/Classes/Isla";
 import ProtocolService, { Protocol } from "./ProtocolService";
 import LoggingService, { Logger } from "./LoggingService";
 
 export default class UnexpectedRestartService implements BaseService {
-  private redis!: ReturnType<typeof createClient>;
-  private logger!: Logger;
-  private protocolService!: ProtocolService;
+  private logger: Logger;
 
-  async onReady(isla: Isla): Promise<void> {
-    this.redis = isla.redis;
-    this.protocolService = isla.getService(ProtocolService);
-    this.logger = isla
-      .getService(LoggingService)
-      .getLogger(UnexpectedRestartService.name);
+  constructor(
+    private readonly protocolService: ProtocolService,
+    loggingService: LoggingService,
+    private readonly redis: ReturnType<typeof createClient>
+  ) {
+    this.logger = loggingService.getLogger(UnexpectedRestartService.name);
+  }
+
+  async start(): Promise<void> {
+    if (process.env.NODE_ENV === "development") {
+      return; // Don't care about unexpected restarts in development.
+    }
 
     // We use existence of a value here to mean it _is_ locked, and lack of a value to mean it is not locked.
     // This means on a clean restart, the value will not exist, and on an unexpected restart, it will.

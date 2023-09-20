@@ -37,10 +37,28 @@ function isSeverityAtLeast(
 export class Logger {
   constructor(
     private readonly mqttClient: MqttClient,
-    private readonly protocolService: ProtocolService,
-    private readonly joinFrontend: JoinFrontend,
+    private readonly isla: Isla,
     private readonly context?: string
   ) {}
+
+  private _protocolService?: ProtocolService;
+  private _joinFrontend?: JoinFrontend;
+
+  get protocolService() {
+    if (!this._protocolService) {
+      this._protocolService = this.isla.getService(ProtocolService);
+    }
+
+    return this._protocolService;
+  }
+
+  get joinFrontend() {
+    if (!this._joinFrontend) {
+      this._joinFrontend = this.isla.getService(JoinFrontend);
+    }
+
+    return this._joinFrontend;
+  }
 
   private async _log(message: string, severity: Severity) {
     const currentProtocol = this.protocolService.getProtocol();
@@ -56,12 +74,15 @@ export class Logger {
     // Always log to console and MQTT
     console.log(`[${this.context}/${severity}] ${message}`);
 
+    console.log(1);
     await this.mqttClient.publishAsync(
       `isla/log/${severity}`,
       JSON.stringify(logMessage)
     );
+    console.log(2);
 
     if (reportToPilot) {
+      console.log(3);
       this.joinFrontend.broadcast(message);
     }
   }
@@ -84,18 +105,12 @@ export class Logger {
 }
 
 export default class LoggingService implements BaseService {
-  private mqttClient!: MqttClient;
-  private isla!: Isla;
-
-  onReady(isla: Isla): Promise<void> {
-    this.isla = isla;
-    this.mqttClient = isla.getService(MqttService).mqttClient;
-    return Promise.resolve();
-  }
+  constructor(
+    private readonly mqttService: MqttService,
+    private readonly isla: Isla
+  ) {}
 
   public getLogger(context?: string) {
-    const protocolService = this.isla.getService(ProtocolService);
-    const joinFrontend = this.isla.getService(JoinFrontend);
-    return new Logger(this.mqttClient, protocolService, joinFrontend, context);
+    return new Logger(this.mqttService.mqttClient, this.isla, context);
   }
 }
