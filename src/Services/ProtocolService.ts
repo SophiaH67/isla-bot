@@ -80,4 +80,8 @@ export default class ProtocolService extends BaseService {
 
     this._protocol = protocol;
   }
+
+  public isAtLeast(protocol: Protocol): boolean {
+    return this._protocol >= protocol;
+  }
 }

@@ -23,6 +23,7 @@ import { MessageLoggerService } from "../Services/MessageLoggerService";
 import MqttService from "../Services/MqttService";
 import LoggingService from "../Services/LoggingService";
 import ProtocolService from "../Services/ProtocolService";
+import UnexpectedRestartService from "../Services/UnexpectedRestartService";
 
 export default class Isla {
   public redis = createClient({
@@ -59,6 +60,7 @@ export default class Isla {
       new MqttService(),
       new LoggingService(),
       new ProtocolService(),
+      new UnexpectedRestartService(),
       new PrismaService(),
       new MessageLoggerService(),
       new RssService(),
