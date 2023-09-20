@@ -1,11 +1,10 @@
-import ms from "ms";
 import { BaseService } from "./BaseService";
 import LoggingService, { Logger } from "./LoggingService";
 import ProtocolService, { Protocol } from "./ProtocolService";
 
 const TimeoutMap = {
-  [Protocol.LINK_TO_PILOT]: ms("1m"),
-  [Protocol.UPHOLD_THE_MISSION]: ms("60m"),
+  [Protocol.LINK_TO_PILOT]: undefined,
+  [Protocol.UPHOLD_THE_MISSION]: undefined,
   [Protocol.PROTECT_THE_PILOT]: undefined, // Not our call to elevate protocol
   [Protocol.GOODBYE_JACK]: undefined, // Cannot elevate protocol from here
 };
