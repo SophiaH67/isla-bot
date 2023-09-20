@@ -87,6 +87,10 @@ export default class Isla {
     for (const service of this.services) {
       await service.start?.();
     }
+
+    // Inform services of protocol change
+    const protocolService = this.getService(ProtocolService);
+    await this.onProtocolChange(protocolService.getProtocol());
   }
 
   async onMessage(msg: IslaMessage) {
