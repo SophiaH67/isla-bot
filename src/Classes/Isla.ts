@@ -56,28 +56,8 @@ export default class Isla {
     assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
 
     // Load services
-    this.services = [
-      new MqttService(),
-      new LoggingService(),
-      new ProtocolService(),
-      new UnexpectedRestartService(),
-      new PrismaService(),
-      new MessageLoggerService(),
-      new RssService(),
-      new CommandService(),
-      new ConversationManagerService(),
-      new TwitterEmbedService(),
-      new MessageActionService(),
-
-      // Frontends
-      new DiscordFrontend(this),
-      new CLIFrontend(this),
-      new JoinFrontend(),
-      new WebsocketFrontend(this),
-      new HttpFrontend(this),
-      new HomeAssistantFrontend(),
-      new MatrixFrontend(this),
-    ];
+    this.services = [];
+    this.registerServices();
 
     process.on("uncaughtException", this.onError.bind(this));
     process.on("unhandledRejection", this.onError.bind(this));
@@ -151,5 +131,31 @@ export default class Isla {
     message: string
   ): Promise<void> {
     await channel.frontend.sendMessage(channel.id, message);
+  }
+
+  private registerServices(): void {
+    this.registerService(new MqttService());
+    this.registerService(new LoggingService());
+    this.registerService(new ProtocolService());
+    this.registerService(new UnexpectedRestartService());
+    this.registerService(new PrismaService());
+    this.registerService(new MessageLoggerService());
+    this.registerService(new RssService());
+    this.registerService(new CommandService());
+    this.registerService(new ConversationManagerService());
+    this.registerService(new TwitterEmbedService());
+    this.registerService(new MessageActionService());
+    // Frontends
+    this.registerService(new DiscordFrontend(this));
+    this.registerService(new CLIFrontend(this));
+    this.registerService(new JoinFrontend());
+    this.registerService(new WebsocketFrontend(this));
+    this.registerService(new HttpFrontend(this));
+    this.registerService(new HomeAssistantFrontend());
+    this.registerService(new MatrixFrontend(this));
+  }
+
+  private registerService(service: BaseService): void {
+    this.services.push(service);
   }
 }
