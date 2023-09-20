@@ -83,7 +83,7 @@ export class Logger {
   }
 }
 
-export default class LoggingService extends BaseService {
+export default class LoggingService implements BaseService {
   private mqttClient!: MqttClient;
   private isla!: Isla;
 

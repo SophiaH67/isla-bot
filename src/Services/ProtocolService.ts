@@ -30,7 +30,7 @@ export enum Protocol {
   PROTECT_THE_PILOT = 3,
 }
 
-export default class ProtocolService extends BaseService {
+export default class ProtocolService implements BaseService {
   private _protocol: Protocol = Protocol.LINK_TO_PILOT;
   private _protocolTimeout: NodeJS.Timeout | undefined;
   logger!: Logger;

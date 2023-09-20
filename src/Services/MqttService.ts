@@ -6,7 +6,7 @@ enum IslaStatus {
   ONLINE,
 }
 
-export default class MqttService extends BaseService {
+export default class MqttService implements BaseService {
   public mqttClient!: mqtt.MqttClient;
 
   onReady(): Promise<void> {

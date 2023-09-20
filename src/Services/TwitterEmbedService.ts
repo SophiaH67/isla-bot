@@ -2,7 +2,7 @@ import { Scraper } from "@the-convocation/twitter-scraper";
 import { IslaMessage } from "../Classes/interfaces/IslaMessage";
 import { BaseService } from "./BaseService";
 
-export default class TwitterEmbedService extends BaseService {
+export default class TwitterEmbedService implements BaseService {
   private twitter = new Scraper();
 
   async onMessage(message: IslaMessage): Promise<void> {

@@ -4,7 +4,7 @@ import Isla from "src/Classes/Isla";
 import ProtocolService, { Protocol } from "./ProtocolService";
 import LoggingService, { Logger } from "./LoggingService";
 
-export default class UnexpectedRestartService extends BaseService {
+export default class UnexpectedRestartService implements BaseService {
   private redis!: ReturnType<typeof createClient>;
   private logger!: Logger;
   private protocolService!: ProtocolService;

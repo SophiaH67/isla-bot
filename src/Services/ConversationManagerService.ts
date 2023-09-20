@@ -2,7 +2,7 @@ import Conversation from "../Classes/Utils/Conversation";
 import { IslaMessage } from "../Classes/interfaces/IslaMessage";
 import { BaseService } from "./BaseService";
 
-export default class ConversationManagerService extends BaseService {
+export default class ConversationManagerService implements BaseService {
   public conversations: { [key: string]: Conversation } = {};
 
   public addToOrNewConversation(message: IslaMessage): Conversation {
