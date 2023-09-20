@@ -18,6 +18,10 @@ export default class CLIFrontend extends BaseFrontend {
   }
 
   public async start() {
+    this.startShell();
+  }
+
+  private async startShell() {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
