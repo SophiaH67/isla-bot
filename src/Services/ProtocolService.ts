@@ -1,3 +1,4 @@
+import Isla from "../Classes/Isla";
 import { BaseService } from "./BaseService";
 import LoggingService, { Logger } from "./LoggingService";
 
@@ -34,7 +35,7 @@ export default class ProtocolService implements BaseService {
   private _protocolTimeout: NodeJS.Timeout | undefined;
   logger!: Logger;
 
-  constructor(loggingService: LoggingService) {
+  constructor(loggingService: LoggingService, private readonly isla: Isla) {
     this.logger = loggingService.getLogger(ProtocolService.name);
   }
 
@@ -73,6 +74,8 @@ export default class ProtocolService implements BaseService {
     }
 
     this._protocol = protocol;
+
+    await this.isla.onProtocolChange(protocol);
   }
 
   public isAtLeast(protocol: Protocol): boolean {

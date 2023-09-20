@@ -22,8 +22,9 @@ import { MessageActionService } from "../Services/MessageActionService";
 import { MessageLoggerService } from "../Services/MessageLoggerService";
 import MqttService from "../Services/MqttService";
 import LoggingService from "../Services/LoggingService";
-import ProtocolService from "../Services/ProtocolService";
+import ProtocolService, { Protocol } from "../Services/ProtocolService";
 import UnexpectedRestartService from "../Services/UnexpectedRestartService";
+import KeepAliveService from "src/Services/KeepAliveService";
 
 export default class Isla {
   public redis = createClient({
@@ -96,6 +97,10 @@ export default class Isla {
     this.services.forEach((service) => service.onMessageUpdate?.(msg));
   }
 
+  async onProtocolChange(protocol: Protocol) {
+    this.services.forEach((service) => service.onProtocolChange?.(protocol));
+  }
+
   public getService<T extends BaseService>(
     service: string | (new (...args: any[]) => T)
   ): T {
@@ -139,8 +144,9 @@ export default class Isla {
     this.registerService(new MqttService());
 
     this.registerService(new LoggingService(this.getService(MqttService), this));
-    this.registerService(new ProtocolService(this.getService(LoggingService)));
+    this.registerService(new ProtocolService(this.getService(LoggingService), this));
     this.registerService(new UnexpectedRestartService(this.getService(ProtocolService), this.getService(LoggingService), this.redis));
+    this.registerService(new KeepAliveService(this.getService(ProtocolService), this.getService(LoggingService)));
 
     this.registerService(new PrismaService());
     this.registerService(new MessageLoggerService(this.getService(PrismaService)));
