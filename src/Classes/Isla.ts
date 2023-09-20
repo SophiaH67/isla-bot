@@ -84,9 +84,16 @@ export default class Isla {
   }
 
   private onError(error: Error) {
-    const logger = this.getService(LoggingService).getLogger("Isla");
-    logger.error("An uncaught exception occurred");
-    logger.debug(error.stack ?? error.message ?? "No stack trace available");
+    try {
+      const logger = this.getService(LoggingService).getLogger("Isla");
+      logger.error("An uncaught exception occurred");
+      logger.debug(error.stack ?? error.message ?? "No stack trace available");
+    } catch (_) {
+      console.error(
+        "An error occurred during either initialization or logging"
+      );
+      console.error(error);
+    }
   }
 
   public async start(): Promise<void> {
