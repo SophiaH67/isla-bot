@@ -6,7 +6,8 @@ import ProtocolService, { Protocol } from "./ProtocolService";
 const TimeoutMap = {
   [Protocol.LINK_TO_PILOT]: ms("1m"),
   [Protocol.UPHOLD_THE_MISSION]: ms("60m"),
-  [Protocol.PROTECT_THE_PILOT]: ms("9999h"), // Cannot elevate protocol, since this is the highest
+  [Protocol.PROTECT_THE_PILOT]: undefined, // Not our call to elevate protocol
+  [Protocol.GOODBYE_JACK]: undefined, // Cannot elevate protocol from here
 };
 
 /**
@@ -17,7 +18,7 @@ const TimeoutMap = {
  * only responsibility of this service.
  */
 export default class KeepAliveService implements BaseService {
-  private MAX_TIMEOUT: number;
+  private MAX_TIMEOUT: number | undefined;
   private timeout: NodeJS.Timeout | undefined;
   private lastPing: Date;
   private logger: Logger;
@@ -27,7 +28,6 @@ export default class KeepAliveService implements BaseService {
     loggingService: LoggingService
   ) {
     this.logger = loggingService.getLogger(KeepAliveService.name);
-    this.MAX_TIMEOUT = TimeoutMap[protocolService.getProtocol()];
     this.lastPing = new Date();
   }
 
@@ -35,6 +35,15 @@ export default class KeepAliveService implements BaseService {
     const newTimeout = TimeoutMap[protocol];
 
     if (newTimeout === this.MAX_TIMEOUT) {
+      return;
+    }
+
+    if (newTimeout === undefined) {
+      this.logger.debug("Cannot elevate protocol from protocol " + protocol);
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = undefined;
       return;
     }
 
@@ -57,11 +66,15 @@ export default class KeepAliveService implements BaseService {
   }
 
   public ping() {
+    this.lastPing = new Date();
+
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
+
+    if (this.MAX_TIMEOUT === undefined) return;
+
     this.timeout = setTimeout(this.expired.bind(this), this.MAX_TIMEOUT);
-    this.lastPing = new Date();
   }
 
   private expired() {

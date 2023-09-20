@@ -24,7 +24,7 @@ import MqttService from "../Services/MqttService";
 import LoggingService from "../Services/LoggingService";
 import ProtocolService, { Protocol } from "../Services/ProtocolService";
 import UnexpectedRestartService from "../Services/UnexpectedRestartService";
-import KeepAliveService from "src/Services/KeepAliveService";
+import KeepAliveService from "../Services/KeepAliveService";
 
 export default class Isla {
   public redis = createClient({

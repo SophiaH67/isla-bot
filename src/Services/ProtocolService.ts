@@ -23,11 +23,17 @@ import LoggingService, { Logger } from "./LoggingService";
  * to by Isla. This means pilot is in a state of danger. Isla should only share
  * information that is absolutely necessary to the pilot. This state will also
  * initiate a self-destruct sequence after 30 minutes of being in this state.
+ *
+ * GOODBYE_JACK
+ *
+ * This is a state set by Isla when the self-destruct sequence has been initiated.
+ * This means self-destruct sequence has been initiated and cannot be de-escalated.
  */
 export enum Protocol {
   LINK_TO_PILOT = 1,
   UPHOLD_THE_MISSION = 2,
   PROTECT_THE_PILOT = 3,
+  GOODBYE_JACK = 4,
 }
 
 export default class ProtocolService implements BaseService {
@@ -61,11 +67,11 @@ export default class ProtocolService implements BaseService {
       case Protocol.PROTECT_THE_PILOT:
         this.logger.error("Protocol 3, protect the pilot");
         this._protocolTimeout = setTimeout(() => {
-          this.logger.warn(
-            "Protocol 3 has been active for 30 minutes. Initiating self-destruct sequence."
-          );
+          this.setProtocol(Protocol.GOODBYE_JACK);
         }, 1000 * 60 * 30);
         break;
+      case Protocol.GOODBYE_JACK:
+        break; // Handled by other services listening in on MQTT; Isla-related code is stored in SelfDestructService.ts
     }
 
     if (protocol !== Protocol.PROTECT_THE_PILOT && this._protocolTimeout) {

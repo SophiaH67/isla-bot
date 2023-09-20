@@ -22,6 +22,7 @@ const minimumLogLevelPerProtocol: Record<Protocol, Severity> = {
   [Protocol.LINK_TO_PILOT]: Severity.INFO,
   [Protocol.UPHOLD_THE_MISSION]: Severity.DEBUG,
   [Protocol.PROTECT_THE_PILOT]: Severity.WARN,
+  [Protocol.GOODBYE_JACK]: Severity.ERROR, // Literally nothing matters anymore, except for any exceptions
 };
 
 function isSeverityAtLeast(
