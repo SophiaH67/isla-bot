@@ -13,11 +13,14 @@ export default class ProtocolCommand implements Command {
     _conversation: Conversation,
     args: string[]
   ): Promise<string> {
+    const protocolService = _conversation.isla.getService(ProtocolService);
+    if (args[1] === undefined) {
+      return "Current protocol: " + (await protocolService.getProtocol());
+    }
+
     const protocol = parseInt(args[1]);
     if (isNaN(protocol) || !Object.values(Protocol).includes(protocol))
       return "Invalid protocol";
-
-    const protocolService = _conversation.isla.getService(ProtocolService);
 
     await protocolService.setProtocol(protocol);
 

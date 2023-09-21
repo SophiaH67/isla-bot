@@ -37,7 +37,7 @@ export enum Protocol {
 }
 
 export default class ProtocolService implements BaseService {
-  private _protocol: Protocol = Protocol.LINK_TO_PILOT;
+  private _protocol: Protocol | undefined;
   private _protocolTimeout: NodeJS.Timeout | undefined;
   logger!: Logger;
 
@@ -45,7 +45,16 @@ export default class ProtocolService implements BaseService {
     this.logger = loggingService.getLogger(ProtocolService.name);
   }
 
-  public getProtocol(): Protocol {
+  public async getProtocol(): Promise<Protocol> {
+    if (this._protocol === undefined) {
+      const value = await this.isla.redis.get("isla:protocol");
+      if (value) {
+        this._protocol = parseInt(value);
+      } else {
+        this._protocol = Protocol.LINK_TO_PILOT;
+      }
+    }
+
     return this._protocol;
   }
 
@@ -80,11 +89,11 @@ export default class ProtocolService implements BaseService {
     }
 
     this._protocol = protocol;
-
+    await this.isla.redis.set("isla:protocol", protocol);
     await this.isla.onProtocolChange(protocol);
   }
 
-  public isAtLeast(protocol: Protocol): boolean {
-    return this._protocol >= protocol;
+  public async isAtLeast(protocol: Protocol): Promise<boolean> {
+    return (await this.getProtocol()) >= protocol;
   }
 }

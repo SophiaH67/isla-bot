@@ -90,7 +90,7 @@ export default class Isla {
 
     // Inform services of protocol change
     const protocolService = this.getService(ProtocolService);
-    await this.onProtocolChange(protocolService.getProtocol());
+    await this.onProtocolChange(await protocolService.getProtocol());
   }
 
   async onMessage(msg: IslaMessage) {
@@ -147,16 +147,35 @@ export default class Isla {
   private registerServices(): void {
     this.registerService(new MqttService());
 
-    this.registerService(new LoggingService(this.getService(MqttService), this));
-    this.registerService(new ProtocolService(this.getService(LoggingService), this));
-    this.registerService(new UnexpectedRestartService(this.getService(ProtocolService), this.getService(LoggingService), this.redis));
-    this.registerService(new KeepAliveService(this.getService(ProtocolService), this.getService(LoggingService)));
+    this.registerService(
+      new LoggingService(this.getService(MqttService), this)
+    );
+    this.registerService(
+      new ProtocolService(this.getService(LoggingService), this)
+    );
+    this.registerService(
+      new UnexpectedRestartService(
+        this.getService(ProtocolService),
+        this.getService(LoggingService),
+        this.redis
+      )
+    );
+    this.registerService(
+      new KeepAliveService(
+        this.getService(ProtocolService),
+        this.getService(LoggingService)
+      )
+    );
 
     this.registerService(new PrismaService());
-    this.registerService(new MessageLoggerService(this.getService(PrismaService)));
+    this.registerService(
+      new MessageLoggerService(this.getService(PrismaService))
+    );
     this.registerService(new RssService(this.getService(PrismaService), this));
-    this.registerService(new MessageActionService(this.getService(PrismaService)));
-    
+    this.registerService(
+      new MessageActionService(this.getService(PrismaService))
+    );
+
     this.registerService(new TwitterEmbedService());
     this.registerService(new CommandService());
     this.registerService(new ConversationManagerService());

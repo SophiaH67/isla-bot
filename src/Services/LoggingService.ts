@@ -62,7 +62,7 @@ export class Logger {
   }
 
   private async _log(message: string, severity: Severity) {
-    const currentProtocol = this.protocolService.getProtocol();
+    const currentProtocol = await this.protocolService.getProtocol();
     const minimumLogLevel = minimumLogLevelPerProtocol[currentProtocol];
     const reportToPilot = isSeverityAtLeast(severity, minimumLogLevel);
 
@@ -75,15 +75,12 @@ export class Logger {
     // Always log to console and MQTT
     console.log(`[${this.context}/${severity}] ${message}`);
 
-    console.log(1);
     await this.mqttClient.publishAsync(
       `isla/log/${severity}`,
       JSON.stringify(logMessage)
     );
-    console.log(2);
 
     if (reportToPilot) {
-      console.log(3);
       this.joinFrontend.broadcast(message);
     }
   }

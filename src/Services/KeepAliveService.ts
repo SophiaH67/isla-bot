@@ -76,14 +76,14 @@ export default class KeepAliveService implements BaseService {
     this.timeout = setTimeout(this.expired.bind(this), this.MAX_TIMEOUT);
   }
 
-  private expired() {
+  private async expired() {
     this.logger.info("Max timeout reached");
 
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
 
-    switch (this.protocolService.getProtocol()) {
+    switch (await this.protocolService.getProtocol()) {
       case Protocol.LINK_TO_PILOT:
       case Protocol.UPHOLD_THE_MISSION:
         this.logger.info("Protocol is not 3, promoting protocol to 3");

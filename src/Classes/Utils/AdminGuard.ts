@@ -4,6 +4,7 @@ const allowedUsers = [
   "178210163369574401",
   "231446107794702336",
   "@marnix:roboco.dev",
+  "cli-user",
 ];
 
 export function AdminGuard(
