@@ -8,7 +8,7 @@ export default class TwitterEmbedService implements BaseService {
   async onMessage(message: IslaMessage): Promise<void> {
     // Get all the links in the message
     const links = message.content.match(
-      /https?:\/\/(www\.)?twitter\.com\/[a-zA-Z0-9_]+\/status\/[0-9]+/g
+      /https?:\/\/(www\.)?(twitter|x)\.com\/[a-zA-Z0-9_]+\/status\/[0-9]+/g
     );
 
     for (const link of links || []) {
