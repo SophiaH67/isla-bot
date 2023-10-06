@@ -54,11 +54,13 @@ class DataSpooler {
 export default class ShellCommand implements Command {
   public description = "Execute a shell command";
   public usage = "shell <command>";
-  public aliases = ["shell ", "sh ", "!"];
+  public aliases = ["shell ", "!"];
 
   @AdminGuard
   public run(conversation: Conversation, args: string[]): Promise<string> {
     const [command, ...commandArgs] = args.slice(1);
+
+    if (command.startsWith("!")) return Promise.resolve(""); // For when people say "!!!"
 
     // Pipe the output of the command to the channel
     const child = cp.spawn(command, commandArgs, {

@@ -3,7 +3,7 @@ import Conversation from "../Classes/Utils/Conversation";
 import HomeAssistant from "../Classes/Utils/HomeAssistant";
 
 export default class LightsCommand implements Command {
-  public aliases = ["lights", "turnon", "turnoff", "turn"];
+  public aliases = ["lights"];
   public description = "Turns the light on or off";
   public usage = "lights <on/off>";
 
