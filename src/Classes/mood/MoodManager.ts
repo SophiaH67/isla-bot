@@ -3,7 +3,7 @@ import Mood from "./Moods";
 import MoodTransformer from "./MoodTransformer";
 
 export default class MoodManager {
-  private tickDelay = 10000;
+  private tickDelay = 60_000;
   public isla: Isla;
   public moodTransformer: MoodTransformer;
 
@@ -118,8 +118,6 @@ export default class MoodManager {
   }
 
   public get mood(): Mood {
-    return Math.random() > 0.5 ? Mood.Frustrated : Mood.Bored;
-
     if (this.sleeping) return Mood.Asleep;
     if (this.exhausted) return Mood.Exhausted;
     if (this.frustrated) return Mood.Frustrated;
