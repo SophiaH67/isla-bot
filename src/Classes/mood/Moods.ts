@@ -3,7 +3,8 @@ enum Mood {
   Exhausted = "exhausted",
   Frustrated = "frustrated",
   Focused = "focused",
-  // TODO: add bt7274
+
+  Bt7274 = "bt7274",
 }
 
 export default Mood;

@@ -149,7 +149,9 @@ export default class Isla {
     this.registerService(
       new ProtocolService(this.getService(LoggingService), this)
     );
-    this.registerService(new MoodManagerService());
+    this.registerService(
+      new MoodManagerService(this.getService(ProtocolService))
+    );
     this.registerService(
       new UnexpectedRestartService(
         this.getService(ProtocolService),
