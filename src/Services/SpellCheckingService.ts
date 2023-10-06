@@ -34,10 +34,18 @@ export class SpellCheckingService implements BaseService {
   }
 
   async onMessage(message: IslaMessage): Promise<void> {
-    if (!this.spellcheckedIds.includes(message.author.id))
-      return console.warn(message.author.id);
+    if (!this.spellcheckedIds.includes(message.author.id)) return;
 
-    const misspelled = await SpellChecker.checkSpellingAsync(message.content);
+    // Remove any mentions
+    let content = message.content.replace(/<[^>]*>?/gm, "");
+    // Also in format of format username#1234
+    content = content.replace(/((.+?)#\d{1,4})/gm, "");
+    // Remove any links
+    content = content.replace(/https?:\/\/[^ ]+/gm, "");
+    // Finally, remove double spaces
+    content = content.replace(/ +(?= )/g, "");
+
+    const misspelled = await SpellChecker.checkSpellingAsync(content);
     if (misspelled.length === 0) return;
 
     const reply = `Hiiiiiiiiii, it seems like you misspelled ${
