@@ -2,9 +2,9 @@ import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
 import { AdminGuard } from "../Classes/Utils/AdminGuard";
 
-export default class ShellCommand implements Command {
-  public description = "Execute a shell command";
-  public usage = "shell <command>";
+export default class EvalCommand implements Command {
+  public description = "Execute javascript within an asynchronous enclosure";
+  public usage = "eval <script>";
   public aliases = ["eval "];
 
   @AdminGuard
