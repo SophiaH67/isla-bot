@@ -45,6 +45,8 @@ export class SpellCheckingService implements BaseService {
     // Finally, remove double spaces
     content = content.replace(/ +(?= )/g, "");
 
+    if(content.split(" ").length < 3) return; // Don't check short messages
+
     const misspelled = await SpellChecker.checkSpellingAsync(content);
     if (misspelled.length === 0) return;
 
