@@ -1,3 +1,4 @@
+import { MoodManagerService } from "../Classes/mood/MoodManager";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
 
@@ -11,6 +12,9 @@ export default class MoodCommand implements Command {
     _args: string[]
   ): Promise<string> {
     const isla = conversation.isla;
-    return `I'm currently feeling ${isla.moodManager.mood} (was feeling ${isla.moodManager.lastMood} before)`;
+    const moodManager = isla.getService(MoodManagerService);
+    return `I'm currently feeling ${
+      moodManager.mood
+    }. Raw values: ${JSON.stringify(moodManager.moodInfo)}`;
   }
 }

@@ -1,7 +1,7 @@
+import Mood from "../Moods";
 import { BaseState, EmotionState } from "./BaseState";
 
 export class SleepingState extends BaseState {
-  public name = "sleeping";
   private startedSleepingAt: Date = new Date();
 
   /**
@@ -52,7 +52,7 @@ export class SleepingState extends BaseState {
   private generateEmotionState(maxSleepProgress: number): EmotionState {
     const exhaustion = this.interpolate(
       maxSleepProgress,
-      [0.8, 1, 0.4, 0.3, 0, 0.2, 0.4]
+      [1, 0.8, 0.4, 0.3, 0, 0.2, 0.4]
     );
     const frustration = this.interpolate(
       maxSleepProgress,
@@ -79,5 +79,9 @@ export class SleepingState extends BaseState {
     const value = values[index];
 
     return value;
+  }
+
+  public getMood(_emotion: EmotionState): Mood {
+    return Mood.Asleep;
   }
 }

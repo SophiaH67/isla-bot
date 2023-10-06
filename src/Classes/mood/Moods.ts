@@ -2,9 +2,8 @@ enum Mood {
   Asleep = "asleep",
   Exhausted = "exhausted",
   Frustrated = "frustrated",
-  Bored = "bored",
-  Curious = "curious",
-  Happy = "happy",
+  Focused = "focused",
+  // TODO: add bt7274
 }
 
 export default Mood;

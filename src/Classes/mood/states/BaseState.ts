@@ -1,3 +1,5 @@
+import Mood from "../Moods";
+
 export interface EmotionState {
   exhaustion: number;
   frustration: number;
@@ -5,8 +7,6 @@ export interface EmotionState {
 }
 
 export abstract class BaseState {
-  public abstract name: string;
-
   public async init() {}
 
   /**
@@ -22,4 +22,6 @@ export abstract class BaseState {
   public abstract tick(
     emotion: EmotionState
   ): Promise<EmotionState | typeof BaseState>;
+
+  public abstract getMood(emotion: EmotionState): Mood;
 }

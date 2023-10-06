@@ -1,134 +1,56 @@
-import Isla from "../Isla";
+import { BaseService } from "src/Services/BaseService";
 import Mood from "./Moods";
-import MoodTransformer from "./MoodTransformer";
+import { BaseState, EmotionState } from "./states/BaseState";
+import { AwakeState } from "./states/AwakeState";
 
-export default class MoodManager {
+export class MoodManagerService implements BaseService {
   private tickDelay = 60_000;
-  public isla: Isla;
-  public moodTransformer: MoodTransformer;
 
-  public lastMood: Mood = Mood.Happy;
-  private lastMoodCheck: Mood = Mood.Happy;
+  private moodState: BaseState = new AwakeState();
 
   // Actual mood factors
-  public sleeping = false;
-  public _exhaustion = 0;
-  public _frustration = 0;
-  public _curiosity = 0.5;
-  public _happiness = 0.5;
-  public _focus = 0.5;
+  private _moodInfo: EmotionState = {
+    exhaustion: 0.5,
+    frustration: 0.5,
+    focus: 0.5,
+  };
 
-  // Getters
-  public get exhaustion(): number {
-    return this._exhaustion;
+  private set moodInfo(value: EmotionState) {
+    this._moodInfo = value;
   }
 
-  public get frustration(): number {
-    return this._frustration;
+  public get moodInfo(): EmotionState {
+    return this._moodInfo;
   }
 
-  public get curiosity(): number {
-    return this._curiosity;
-  }
-
-  public get happiness(): number {
-    return this._happiness;
-  }
-
-  public get focus() {
-    return this._focus;
-  }
-
-  // Setters
-  public set exhaustion(value: number) {
-    if (value < 0) value = 0;
-    if (value > 1) value = 1;
-    this._exhaustion = value;
-  }
-
-  public set frustration(value: number) {
-    if (value < 0) value = 0;
-    if (value > 1) value = 1;
-    this._frustration = value;
-  }
-
-  public set curiosity(value: number) {
-    if (value < 0) value = 0;
-    if (value > 1) value = 1;
-    this._curiosity = value;
-  }
-
-  public set happiness(value: number) {
-    if (value < 0) value = 0;
-    if (value > 1) value = 1;
-    this._happiness = value;
-  }
-
-  public set focus(value: number) {
-    if (value < 0) value = 0;
-    if (value > 1) value = 1;
-    this._focus = value;
-  }
-
-  // Mood flags
-  public exhausted = false;
-  public frustrated = false;
-  public curious = false;
-  public happy = false;
-  public bored = false;
-
-  constructor(isla: Isla) {
-    this.isla = isla;
-    this.moodTransformer = new MoodTransformer();
-
+  async start(): Promise<void> {
     this.tick();
     setInterval(() => this.tick(), this.tickDelay);
   }
 
-  public async transformMessage(message: string): Promise<string> {
-    return (await this.moodTransformer.transform(message, this.mood)).trim();
-  }
+  private async tick(): Promise<void> {
+    const newMood = await this.moodState.tick(this.moodInfo);
 
-  tick() {
-    this.exhaustion += this.sleeping ? -0.1 : 0.01;
-
-    this.happiness += (Math.random() - (this.sleeping ? 0.2 : 0.5)) * 0.3;
-    this.focus += (Math.random() - (this.sleeping ? 0.2 : 0.5)) * 0.3;
-    this.curiosity += (Math.random() - (this.sleeping ? 0.2 : 0.5)) * 0.3;
-
-    this.calculateMood();
-
-    if (this.exhaustion > 0.9) {
-      this.sleeping = true;
-    } else if (this.exhaustion < 0.1) {
-      this.sleeping = false;
+    // Check if it's a class (not instance)
+    if ("prototype" in newMood) {
+      return await this.switchState(newMood);
     }
 
-    if (this.lastMoodCheck !== this.mood) this.lastMood = this.lastMoodCheck;
+    // Cap the values
+    newMood.exhaustion = Math.min(1, Math.max(0, newMood.exhaustion));
+    newMood.frustration = Math.min(1, Math.max(0, newMood.frustration));
+    newMood.focus = Math.min(1, Math.max(0, newMood.focus));
 
-    this.lastMoodCheck = this.mood;
-  }
-
-  calculateMood() {
-    this.exhausted = this.exhaustion > 0.4;
-    this.frustrated = this.frustration > 0.4;
-    this.curious = this.curiosity > 0.4;
-    this.happy = this.happiness > 0.4;
-    this.bored = this.focus < 0.6;
+    this.moodInfo = newMood;
   }
 
   public get mood(): Mood {
-    if (this.sleeping) return Mood.Asleep;
-    if (this.exhausted) return Mood.Exhausted;
-    if (this.frustrated) return Mood.Frustrated;
-    if (this.curious) return Mood.Curious;
-    if (this.happy) return Mood.Happy;
-
-    return Mood.Bored;
+    return this.moodState.getMood(this.moodInfo);
   }
 
-  public wakeUp() {
-    this.sleeping = false;
-    //@TODO: increase exhaustion modifier by some amount
+  public async switchState(state: typeof BaseState): Promise<void> {
+    this.moodState = new (state as new () => BaseState)();
+    await this.moodState.init();
+    await this.tick();
   }
 }
