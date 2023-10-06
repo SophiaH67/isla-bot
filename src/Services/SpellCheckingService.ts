@@ -1,4 +1,4 @@
-import { IslaMessage } from "src/Classes/interfaces/IslaMessage";
+import { IslaMessage } from "../Classes/interfaces/IslaMessage";
 import SpellChecker from "spellchecker";
 import { BaseService } from "./BaseService";
 import { PrismaService } from "./PrismaService";

@@ -1,6 +1,6 @@
 import { BaseService } from "./BaseService";
 import { PrismaService } from "./PrismaService";
-import { IslaMessage } from "src/Classes/interfaces/IslaMessage";
+import { IslaMessage } from "../Classes/interfaces/IslaMessage";
 
 export class MessageActionService implements BaseService {
   constructor(private readonly prisma: PrismaService) {}

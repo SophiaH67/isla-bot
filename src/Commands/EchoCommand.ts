@@ -1,4 +1,4 @@
-import { AdminGuard } from "src/Classes/Utils/AdminGuard";
+import { AdminGuard } from "../Classes/Utils/AdminGuard";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
 
