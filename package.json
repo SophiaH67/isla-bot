@@ -21,6 +21,7 @@
     "@types/ms": "^0.7.31",
     "@types/node": "^18.11.18",
     "@types/prompt": "^1.1.2",
+    "@types/spellchecker": "^3.5.0",
     "@types/tough-cookie": "^4.0.2",
     "@types/xml2js": "^0.4.11",
     "nodemon": "^2.0.16",
@@ -51,6 +52,7 @@
     "rss-parser": "^3.13.0",
     "sharp": "^0.32.4",
     "socket.io": "^4.5.4",
+    "spellchecker": "^3.7.1",
     "uuidv4": "^6.2.13"
   }
 }

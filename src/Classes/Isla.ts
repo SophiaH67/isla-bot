@@ -25,6 +25,7 @@ import LoggingService from "../Services/LoggingService";
 import ProtocolService, { Protocol } from "../Services/ProtocolService";
 import UnexpectedRestartService from "../Services/UnexpectedRestartService";
 import KeepAliveService from "../Services/KeepAliveService";
+import { SpellCheckingService } from "../Services/SpellCheckingService";
 
 export default class Isla {
   public redis = createClient({
@@ -179,6 +180,9 @@ export default class Isla {
     this.registerService(new TwitterEmbedService());
     this.registerService(new CommandService());
     this.registerService(new ConversationManagerService());
+    this.registerService(
+      new SpellCheckingService(this.getService(PrismaService))
+    );
 
     // Frontends
     this.registerService(new DiscordFrontend());

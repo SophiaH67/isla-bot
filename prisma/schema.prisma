@@ -66,3 +66,8 @@ model LoggedUser {
 
   @@unique([id, frontend])
 }
+
+model SpellCheckedUser {
+  id        String   @id
+  createdAt DateTime @default(now())
+}
