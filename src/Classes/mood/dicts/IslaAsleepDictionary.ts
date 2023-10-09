@@ -16,4 +16,5 @@ function deepSet<T extends Record<string, unknown>>(obj: T, value: string): T {
 
 export const IslaAsleepDictionary: TranslationDictionary = {
   ...deepSet(IslaExhaustedDictionary, "zzz"),
+  wakeUpCommand: "Why did you wake me up,,,",
 };

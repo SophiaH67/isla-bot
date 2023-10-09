@@ -39,7 +39,7 @@ export default class DirectiveHandler {
       //@ts-expect-error - sleepBypass is set in some decorators
       !command.sleepBypass
     ) {
-      return "I'm asleep right now, I can't do that";
+      return "Zzz...";
     }
 
     const args =
