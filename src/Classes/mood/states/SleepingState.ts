@@ -82,6 +82,6 @@ export class SleepingState extends BaseState {
   }
 
   public getMood(_emotion: EmotionState): Mood {
-    return Mood.Asleep;
+    return Mood.IslaAsleep;
   }
 }

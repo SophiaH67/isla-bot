@@ -1,10 +1,10 @@
 enum Mood {
-  Asleep = "asleep",
-  Exhausted = "exhausted",
-  Frustrated = "frustrated",
-  Focused = "focused",
+  IslaAsleep = "IslaAsleep",
+  IslaExhausted = "IslaExhausted",
+  IslaFrustrated = "IslaFrustrated",
+  IslaFocused = "IslaFocused",
 
-  Bt7274 = "bt7274",
+  Bt7274 = "Bt7274",
 }
 
 export default Mood;

@@ -17,7 +17,7 @@ export default class WakeUpCommand implements Command {
 
     const moodManager = isla.getService(MoodManagerService);
 
-    if (moodManager.mood === Mood.Asleep) {
+    if (moodManager.mood === Mood.IslaAsleep) {
       moodManager.switchState(AwakeState);
       return "Why did you wake me up?"; //TODO: Translation key for waking up!
     } else {

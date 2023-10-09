@@ -1,5 +1,5 @@
 import { TranslationDictionary } from ".";
-import { ExhaustedDictionary } from "./ExhaustedDictionary";
+import { IslaExhaustedDictionary } from "./IslaExhaustedDictionary";
 
 function deepSet<T extends Record<string, unknown>>(obj: T, value: string): T {
   const keys = Object.keys(obj);
@@ -14,6 +14,6 @@ function deepSet<T extends Record<string, unknown>>(obj: T, value: string): T {
   return obj;
 }
 
-export const AsleepDictionary: TranslationDictionary = {
-  ...deepSet(ExhaustedDictionary, "zzz"),
+export const IslaAsleepDictionary: TranslationDictionary = {
+  ...deepSet(IslaExhaustedDictionary, "zzz"),
 };

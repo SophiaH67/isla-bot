@@ -45,13 +45,13 @@ export class AwakeState extends BaseState {
 
     switch (highest) {
       case "exhaustion":
-        return Mood.Exhausted;
+        return Mood.IslaExhausted;
 
       case "frustration":
-        return Mood.Frustrated;
+        return Mood.IslaFrustrated;
 
       case "focus":
-        return Mood.Focused;
+        return Mood.IslaFocused;
     }
   }
 }
