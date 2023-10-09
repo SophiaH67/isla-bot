@@ -25,7 +25,9 @@ export default class UnexpectedRestartService implements BaseService {
 
     if (locked) {
       // We have a lock, so we have an unexpected restart.
-      if (!this.protocolService.isAtLeast(Protocol.UPHOLD_THE_MISSION)) {
+      if (
+        !(await this.protocolService.isAtLeast(Protocol.UPHOLD_THE_MISSION))
+      ) {
         this.protocolService.setProtocol(Protocol.UPHOLD_THE_MISSION);
       }
 
@@ -37,6 +39,9 @@ export default class UnexpectedRestartService implements BaseService {
   }
 
   public async unlock() {
+    if (await this.protocolService.isAtLeast(Protocol.UPHOLD_THE_MISSION))
+      throw new Error("Cannot unlock whilst not in protocol 1");
+
     await this.redis.del("isla:restart:lock");
   }
 
