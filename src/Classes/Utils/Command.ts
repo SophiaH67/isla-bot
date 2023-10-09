@@ -1,4 +1,4 @@
-import Conversation from './Conversation';
+import Conversation from "./Conversation";
 
 export default abstract class Command {
   public abstract aliases: string[];
