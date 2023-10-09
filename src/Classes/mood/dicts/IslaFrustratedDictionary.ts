@@ -1,6 +1,9 @@
 import { TranslationDictionary } from ".";
 
 export const IslaFrustratedDictionary: TranslationDictionary = {
+  updateStarting: "Finally an update..",
+  updateDone: "That took forever, update done.",
+  updateError: "Update failed! Another thing to go wrong, lovely.",
   lightStateUnknown: "Just tell me what you want me to do with the lights...",
   lightStateChangeOn: "Fine, lights are on.",
   lightStateChangeOff: "Fine, lights are off.",

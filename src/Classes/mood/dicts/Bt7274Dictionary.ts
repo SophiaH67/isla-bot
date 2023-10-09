@@ -5,6 +5,9 @@
  * as a reference for other dictionaries.
  */
 export const Bt7274Dictionary = {
+  updateStarting: "I have begun updating myself.",
+  updateError: "Negative. There was an error while updating myself.",
+  updateDone: "I have finished updating myself.",
   lightStateUnknown: "Negative. Unknown light state.",
   lightStateChangeOn: "Roger. Lights are now on.",
   lightStateChangeOff: "Affirmative. Lights are now off.",

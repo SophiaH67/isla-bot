@@ -1,6 +1,9 @@
 import { TranslationDictionary } from ".";
 
 export const IslaExhaustedDictionary: TranslationDictionary = {
+  updateStarting: "update started, I guess...",
+  updateDone: "finally done updating...",
+  updateError: "update failed, somewhere...",
   lightStateUnknown: "i don't know what you mean by that...",
   lightStateChangeOn: "Liiiiiighttttsss",
   lightStateChangeOff: "aaaah, darkness...",

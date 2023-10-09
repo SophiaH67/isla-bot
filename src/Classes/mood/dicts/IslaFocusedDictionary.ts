@@ -1,6 +1,9 @@
 import { TranslationDictionary } from ".";
 
 export const IslaFocusedDictionary: TranslationDictionary = {
+  updateDone: "Updates completed!",
+  updateError: "Unfortunately, there was an error while updating.",
+  updateStarting: "I'm starting to update myself!",
   lightStateUnknown:
     "I cannot figure out what you want me to do with the lights.",
   lightStateChangeOn: "Lights, on!",
