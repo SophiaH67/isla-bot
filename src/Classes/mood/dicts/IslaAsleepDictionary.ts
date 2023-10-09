@@ -1,20 +1,26 @@
 import { TranslationDictionary } from ".";
 import { IslaExhaustedDictionary } from "./IslaExhaustedDictionary";
 
-function deepSet<T extends Record<string, unknown>>(obj: T, value: string): T {
-  const keys = Object.keys(obj);
-  for (const key of keys) {
-    if (typeof obj[key] === "object") {
-      deepSet(obj[key] as Record<string, unknown>, value);
-    } else {
-      obj[key as keyof T] = value as T[keyof T];
+function deepCloneAndSet<T extends Record<string, unknown>>(
+  obj: T,
+  value: string
+): T {
+  const clone = JSON.parse(JSON.stringify(obj));
+  for (const key in clone) {
+    const val = clone[key];
+
+    if (typeof val === "object") {
+      deepCloneAndSet(val, value);
+    }
+
+    if (typeof val === "string") {
+      clone[key] = value;
     }
   }
-
-  return obj;
+  return clone;
 }
 
 export const IslaAsleepDictionary: TranslationDictionary = {
-  ...deepSet(IslaExhaustedDictionary, "zzz"),
+  ...deepCloneAndSet(IslaExhaustedDictionary, "zzz"),
   wakeUpCommand: "Why did you wake me up,,,",
 };
