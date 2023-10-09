@@ -22,10 +22,12 @@ export default class WakeUpCommand implements Command {
 
     const moodManager = isla.getService(MoodManagerService);
 
+    const toReturn = t(conversation, "wakeUpCommand");
+
     if (moodManager.mood === Mood.IslaAsleep) {
-      moodManager.switchState(AwakeState);
+      await moodManager.switchState(AwakeState);
     }
 
-    return t(conversation, "wakeUpCommand");
+    return toReturn;
   }
 }
