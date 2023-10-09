@@ -1,6 +1,6 @@
 import assert from "assert";
 import BaseFrontend from "./Frontends/BaseFrontend";
-import MoodManager from "./mood/MoodManager";
+import { MoodManagerService } from "./mood/MoodManager";
 import { createClient } from "redis";
 import DirectiveHandler from "./Utils/DirectiveHandler";
 import ConversationManagerService from "../Services/ConversationManagerService";
@@ -36,7 +36,6 @@ export default class Isla {
   public directiveHandler = new DirectiveHandler(this);
 
   private services: BaseService[];
-  public moodManager: MoodManager;
 
   public async transformMessage(message: string): Promise<string>;
   public async transformMessage(message: undefined): Promise<undefined>;
@@ -47,14 +46,10 @@ export default class Isla {
     if (!message) {
       return undefined;
     }
-    return await this.moodManager
-      .transformMessage(message)
-      .catch(() => message);
+    return message;
   }
 
   constructor() {
-    this.moodManager = new MoodManager(this);
-
     assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
 
     // Load services
@@ -153,6 +148,9 @@ export default class Isla {
     );
     this.registerService(
       new ProtocolService(this.getService(LoggingService), this)
+    );
+    this.registerService(
+      new MoodManagerService(this.getService(ProtocolService))
     );
     this.registerService(
       new UnexpectedRestartService(

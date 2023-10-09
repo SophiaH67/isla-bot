@@ -8,10 +8,7 @@ import {
 import assert from "assert";
 import { MatrixChatEvent, MatrixEvent } from "../Utils/MatrixEvent";
 import Isla from "../Isla";
-import { readFile } from "fs/promises";
-import Mood from "../mood/Moods";
 import { createHash } from "crypto";
-import { getImageFromMood } from "../Utils/moodToImage";
 import { IslaMessage, ReplyOptions } from "../interfaces/IslaMessage";
 import { IslaUser } from "../interfaces/IslaUser";
 import { fromBuffer } from "file-type";
@@ -30,8 +27,6 @@ export default class MatrixFrontend extends BaseFrontend {
   private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
   private crypto = new RustSdkCryptoStorageProvider("data/crypto");
   private client: MatrixClient | undefined;
-
-  private currentMoodProfile: Mood = Mood.Frustrated;
 
   constructor(private readonly isla: Isla) {
     super();
@@ -219,9 +214,6 @@ export default class MatrixFrontend extends BaseFrontend {
   }
 
   public async handleMessage(roomId: string, event: MatrixChatEvent) {
-    if (this.isla.moodManager.mood !== this.currentMoodProfile)
-      await this.updateProfileToMatchMood();
-
     const message = await this.messageEventToIslaMessage(roomId, event);
 
     await this.isla.onMessage(message);
@@ -298,41 +290,6 @@ export default class MatrixFrontend extends BaseFrontend {
     );
 
     return register.accessToken;
-  }
-
-  private async uploadFileCached(path: string) {
-    if (!this.client) throw new Error("Matrix client not initialised");
-    const pathHash = createHash("md5").update(path).digest("hex");
-    const redisKey = `matrix:cache:${pathHash}`;
-    const existingFile = await this.isla.redis.get(redisKey);
-
-    if (existingFile) {
-      // Check if it still exists on matrix side
-      try {
-        await this.client.downloadContent(existingFile);
-        return existingFile;
-      } catch (e) {
-        // Doesn't exist, so we'll upload it again
-      }
-    }
-
-    const newMatrixFile = await this.client.uploadContent(await readFile(path));
-
-    await this.isla.redis.set(redisKey, newMatrixFile);
-
-    return newMatrixFile;
-  }
-
-  private async updateProfileToMatchMood() {
-    if (!this.client) return;
-    if (Math.random() !== 2) return; // Will always return, but now TS won't nag me
-    const pfp = getImageFromMood(this.isla.moodManager.mood);
-
-    const matrixUpload = await this.uploadFileCached(pfp);
-
-    await this.client.setAvatarUrl(matrixUpload);
-
-    this.currentMoodProfile = this.isla.moodManager.mood;
   }
 
   public async subscribe(...args: Parameters<MatrixClient["on"]>) {

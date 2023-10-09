@@ -2,6 +2,8 @@ import Conversation from "./Conversation";
 import Command from "./Command";
 import Isla from "../Isla";
 import CommandService from "../../Services/CommandService";
+import { MoodManagerService } from "../mood/MoodManager";
+import Mood from "../mood/Moods";
 
 export function findCommand(
   commands: Command[],
@@ -29,6 +31,16 @@ export default class DirectiveHandler {
     const commandService = this.isla.getService<CommandService>(CommandService);
     const [command, alias] = findCommand(commandService.commands, directive);
     if (!command || !alias) return; // No command found
+
+    const moodManager = this.isla.getService(MoodManagerService);
+
+    if (
+      moodManager.mood === Mood.IslaAsleep &&
+      //@ts-expect-error - sleepBypass is set in some decorators
+      !command.sleepBypass
+    ) {
+      return "Zzz...";
+    }
 
     const args =
       directive
