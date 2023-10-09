@@ -1,3 +1,4 @@
+import { t } from "../Classes/mood/dicts";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
 import HomeAssistant from "../Classes/Utils/HomeAssistant";
@@ -11,7 +12,7 @@ export default class LightsCommand implements Command {
   private hass = new HomeAssistant();
 
   public async run(
-    _conversation: Conversation,
+    conversation: Conversation,
     args: string[]
   ): Promise<string> {
     const words = args.map((word) => word.toLowerCase());
@@ -24,20 +25,21 @@ export default class LightsCommand implements Command {
       : null;
 
     if (!targetState) {
-      return "Error, I couldn't figure out the desired state";
+      return t(conversation, "lightStateUnknown");
     }
 
     await this.hass.reloadIkea();
 
-    const res =
-      targetState === "on"
-        ? await this.hass.turnOn(this.entity)
-        : await this.hass.turnOff(this.entity);
+    const on = targetState === "on";
+
+    const res = on
+      ? await this.hass.turnOn(this.entity)
+      : await this.hass.turnOff(this.entity);
 
     if (res.status === 200) {
-      return `The light is now ${targetState}`;
+      return t(conversation, on ? "lightStateChangeOn" : "lightStateChangeOff");
     } else {
-      return `Error, I couldn't turn the light ${targetState}`;
+      return t(conversation, "lightStateChangeError");
     }
   }
 }

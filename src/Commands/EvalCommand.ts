@@ -1,6 +1,7 @@
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
 import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { t } from "../Classes/mood/dicts";
 
 export default class EvalCommand implements Command {
   public description = "Execute javascript within an asynchronous enclosure";
@@ -9,7 +10,7 @@ export default class EvalCommand implements Command {
 
   @AdminGuard
   public async run(
-    _conversation: Conversation,
+    conversation: Conversation,
     args: string[]
   ): Promise<string> {
     const script = args.slice(1).join(" ");
@@ -17,7 +18,7 @@ export default class EvalCommand implements Command {
     const actionPromise = eval(`(async () => ${script})()`)
       .then((result: unknown) => "" + result)
       .catch((e: Error) => e.toString())
-      .catch((_e: Error) => "An unknown error occurred");
+      .catch((_e: Error) => t(conversation, "unknownEvalError"));
 
     return await actionPromise;
   }
