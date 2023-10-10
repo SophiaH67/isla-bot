@@ -5,9 +5,9 @@ import LoggingService from "../Services/LoggingService";
 import { t } from "../Classes/mood/dicts";
 
 export default class UpdateCommand implements Command {
-  public aliases = ["islaupdate", "islaupgrade"];
+  public aliases = ["updateisla", "upgradeisla"];
   public description = "Updates Isla";
-  public usage = "islaupdate";
+  public usage = "updateisla";
 
   @AdminGuard
   public async run(
