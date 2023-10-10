@@ -1,5 +1,6 @@
 import Conversation from "../Classes/Utils/Conversation";
 import Command from "../Classes/Utils/Command";
+import { SleepBypass } from "src/Classes/Utils/SleepBypass";
 
 export default class CanYouCommand implements Command {
   public name = "can you";
@@ -23,6 +24,7 @@ export default class CanYouCommand implements Command {
   public description = "Replaces words to find a matching command";
   public usage = "can you <command>";
 
+  @SleepBypass
   public async run(
     conversation: Conversation,
     args: string[]
