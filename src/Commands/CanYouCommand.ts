@@ -1,6 +1,6 @@
 import Conversation from "../Classes/Utils/Conversation";
 import Command from "../Classes/Utils/Command";
-import { SleepBypass } from "src/Classes/Utils/SleepBypass";
+import { SleepBypass } from "../Classes/Utils/SleepBypass";
 
 export default class CanYouCommand implements Command {
   public name = "can you";
