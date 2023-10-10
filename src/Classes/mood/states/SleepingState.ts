@@ -70,13 +70,26 @@ export class SleepingState extends BaseState {
     };
   }
 
-  private interpolate(
-    maxSleepProgress: number,
-    values: [number, number, number, number, number, number, number]
-  ): number {
-    const index = Math.floor(maxSleepProgress * values.length);
+  /**
+   * @param maxSleepProgress 0-1
+   * @param values The datapoints to interpolate between
+   */
+  private interpolate(maxSleepProgress: number, values: number[]): number {
+    const max = values.length - 1;
+    // Get closest 2 datapoints
+    const leftIndex = Math.floor(maxSleepProgress * max);
+    const rightIndex = leftIndex + 1;
 
-    const value = values[index];
+    // Get progress between the 2 datapoints
+    const progress = maxSleepProgress * max - leftIndex;
+
+    // Get the values of the 2 datapoints
+    const leftValue = values[leftIndex];
+    const rightValue = values[rightIndex];
+
+    // Interpolate
+    const diff = rightValue - leftValue;
+    const value = leftValue + diff * progress;
 
     return value;
   }
