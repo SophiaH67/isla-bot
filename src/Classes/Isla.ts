@@ -192,7 +192,7 @@ export default class Isla {
     this.registerService(
       new MatrixFrontend(
         this,
-        this.getService(LoggingService).getLogger("MatrixFrontend")
+        this.getService(LoggingService).getLogger(MatrixFrontend.name)
       )
     );
   }
