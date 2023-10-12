@@ -14,7 +14,7 @@ export default class UnexpectedRestartService implements BaseService {
     this.logger = loggingService.getLogger(UnexpectedRestartService.name);
   }
 
-  async start(): Promise<void> {
+  async onStart(): Promise<void> {
     if (process.env.NODE_ENV === "development") {
       return; // Don't care about unexpected restarts in development.
     }

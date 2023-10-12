@@ -7,7 +7,7 @@ const BASE_COMMAND_DIR = __dirname + "/../Commands";
 export default class CommandService implements BaseService {
   public commands: Command[] = [];
 
-  async start(): Promise<void> {
+  async onStart(): Promise<void> {
     const files = await readdir(BASE_COMMAND_DIR);
     files.forEach((file) => {
       if (file.endsWith(".js") || file.endsWith(".ts")) {

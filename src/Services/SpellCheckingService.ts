@@ -8,7 +8,7 @@ export class SpellCheckingService implements BaseService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async start(): Promise<void> {
+  async onStart(): Promise<void> {
     const users = await this.prisma.spellCheckedUser.findMany({});
     users.forEach((user) => this.spellcheckedIds.push(user.id));
   }

@@ -39,7 +39,7 @@ export default class WebsocketFrontend extends BaseFrontend {
     this.io.sockets.emit("broadcast", message);
   }
 
-  async start() {
+  async onStart() {
     const server = createServer();
     this.io = new Server<
       ClientToServerEvents,

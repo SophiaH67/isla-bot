@@ -33,7 +33,7 @@ export default class MatrixFrontend extends BaseFrontend {
     super();
   }
 
-  public async start() {
+  public async onStart() {
     const accessToken = await this.getAccessToken();
 
     this.client = new MatrixClient(

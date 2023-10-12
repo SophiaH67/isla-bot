@@ -22,7 +22,7 @@ export default class MqttService implements BaseService {
     });
   }
 
-  async start(): Promise<void> {
+  async onStart(): Promise<void> {
     this.mqttClient.publish("isla/status", IslaStatus.ONLINE.toString());
   }
 }

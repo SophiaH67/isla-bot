@@ -27,7 +27,7 @@ export class MoodManagerService implements BaseService {
     return this._moodInfo;
   }
 
-  async start(): Promise<void> {
+  async onStart(): Promise<void> {
     this.tick();
     setInterval(() => this.tick(), this.tickDelay);
   }

@@ -45,6 +45,10 @@ export default class ProtocolService implements BaseService {
     this.logger = loggingService.getLogger(ProtocolService.name);
   }
 
+  async onStart(): Promise<void> {
+    await this.isla.onProtocolChange(await this.getProtocol());
+  }
+
   public async getProtocol(): Promise<Protocol> {
     if (this._protocol === undefined) {
       const value = await this.isla.redis.get("isla:protocol");

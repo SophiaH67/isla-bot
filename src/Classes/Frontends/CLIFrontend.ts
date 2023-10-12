@@ -17,7 +17,7 @@ export default class CLIFrontend extends BaseFrontend {
     console.log(`Broadcast: ${message}`);
   }
 
-  public async start() {
+  public async onStart() {
     this.startShell();
   }
 

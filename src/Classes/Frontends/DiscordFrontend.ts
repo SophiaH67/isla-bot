@@ -21,7 +21,7 @@ export default class DiscordFrontend extends BaseFrontend {
     super();
   }
 
-  public async start(): Promise<void> {
+  public async onStart(): Promise<void> {
     this.bot.login(process.env.DISCORD_TOKEN);
 
     this.bot.on("ready", () => {

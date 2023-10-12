@@ -18,7 +18,7 @@ export class RssService implements BaseService {
     this.feeds = new Map();
   }
 
-  public async start(): Promise<void> {
+  public async onStart(): Promise<void> {
     for (const feed of await this.prisma.rssFeed.findMany()) {
       this.startFeed(feed);
     }

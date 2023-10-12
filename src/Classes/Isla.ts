@@ -5,7 +5,7 @@ import { createClient } from "redis";
 import DirectiveHandler from "./Utils/DirectiveHandler";
 import ConversationManagerService from "../Services/ConversationManagerService";
 import { IslaMessage } from "./interfaces/IslaMessage";
-import { BaseService } from "../Services/BaseService";
+import { BaseService, EventListeners } from "../Services/BaseService";
 import DiscordFrontend from "./Frontends/DiscordFrontend";
 import CLIFrontend from "./Frontends/CLIFrontend";
 import JoinFrontend from "./Frontends/JoinFrontend";
@@ -27,7 +27,7 @@ import UnexpectedRestartService from "../Services/UnexpectedRestartService";
 import KeepAliveService from "../Services/KeepAliveService";
 import { SpellCheckingService } from "../Services/SpellCheckingService";
 
-export default class Isla {
+export default class Isla implements EventListeners {
   public redis = createClient({
     url: process.env.REDIS_HOST
       ? `redis://${process.env.REDIS_HOST}`
@@ -80,25 +80,7 @@ export default class Isla {
     console.log(`${Isla.name} is ready!, database ping: ${ping}`);
 
     // Start services
-    for (const service of this.services) {
-      await service.start?.();
-    }
-
-    // Inform services of protocol change
-    const protocolService = this.getService(ProtocolService);
-    await this.onProtocolChange(await protocolService.getProtocol());
-  }
-
-  async onMessage(msg: IslaMessage) {
-    this.services.forEach((service) => service.onMessage?.(msg));
-  }
-
-  async onMessageUpdate(msg: IslaMessage) {
-    this.services.forEach((service) => service.onMessageUpdate?.(msg));
-  }
-
-  async onProtocolChange(protocol: Protocol) {
-    this.services.forEach((service) => service.onProtocolChange?.(protocol));
+    this.onStart();
   }
 
   public getService<T extends BaseService>(
@@ -199,5 +181,22 @@ export default class Isla {
 
   private registerService(service: BaseService): void {
     this.services.push(service);
+  }
+
+  // Event stuff
+  async onStart() {
+    this.services.forEach((service) => service.onStart?.());
+  }
+
+  async onMessage(msg: IslaMessage) {
+    this.services.forEach((service) => service.onMessage?.(msg));
+  }
+
+  async onMessageUpdate(msg: IslaMessage) {
+    this.services.forEach((service) => service.onMessageUpdate?.(msg));
+  }
+
+  async onProtocolChange(protocol: Protocol) {
+    this.services.forEach((service) => service.onProtocolChange?.(protocol));
   }
 }

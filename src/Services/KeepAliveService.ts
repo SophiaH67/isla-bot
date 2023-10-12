@@ -60,7 +60,7 @@ export default class KeepAliveService implements BaseService {
     this.timeout = setTimeout(this.expired.bind(this), newTimeoutTime);
   }
 
-  async start(): Promise<void> {
+  async onStart(): Promise<void> {
     this.ping();
   }
 

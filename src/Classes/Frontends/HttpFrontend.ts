@@ -14,7 +14,7 @@ export default class HttpFrontend extends BaseFrontend {
     super();
   }
 
-  public async start() {
+  public async onStart() {
     this.app = express();
 
     this.app.use(bodyParser.raw({ type: "*/*" }));

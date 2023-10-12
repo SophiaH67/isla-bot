@@ -4,7 +4,7 @@ import BaseFrontend from "./BaseFrontend";
 export default class HomeAssistantFrontend extends BaseFrontend {
   private hass = new HomeAssistant();
 
-  public async start() {
+  public async onStart() {
     if (process.env.NODE_ENV === "production")
       await this.broadcast("Aila is now online.");
   }
