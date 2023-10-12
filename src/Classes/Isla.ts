@@ -189,7 +189,12 @@ export default class Isla {
     this.registerService(new WebsocketFrontend(this));
     this.registerService(new HttpFrontend(this));
     this.registerService(new HomeAssistantFrontend());
-    this.registerService(new MatrixFrontend(this));
+    this.registerService(
+      new MatrixFrontend(
+        this,
+        this.getService(LoggingService).getLogger("MatrixFrontend")
+      )
+    );
   }
 
   private registerService(service: BaseService): void {

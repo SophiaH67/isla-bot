@@ -15,6 +15,7 @@ import { fromBuffer } from "file-type";
 import sharp from "sharp";
 import { marked } from "marked";
 import { IslaChannel } from "../interfaces/IslaChannel";
+import { Logger } from "../../Services/LoggingService";
 
 const fetchToBuffer = async (url: string) => {
   const response = await fetch(url);
@@ -28,7 +29,7 @@ export default class MatrixFrontend extends BaseFrontend {
   private crypto = new RustSdkCryptoStorageProvider("data/crypto");
   private client: MatrixClient | undefined;
 
-  constructor(private readonly isla: Isla) {
+  constructor(private readonly isla: Isla, private readonly logger: Logger) {
     super();
   }
 
@@ -184,7 +185,10 @@ export default class MatrixFrontend extends BaseFrontend {
       await this.client?.redactEvent(roomId, messageId);
     };
 
-    const user = await this.client?.getUserProfile(event.sender);
+    const user = await this.client?.getUserProfile(event.sender).catch((e) => {
+      this.logger.debug("Failed to get user profile");
+      this.logger.debug(e);
+    });
 
     const author = new IslaUser(
       event.sender,
