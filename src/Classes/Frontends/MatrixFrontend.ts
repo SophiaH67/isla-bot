@@ -28,6 +28,7 @@ export default class MatrixFrontend extends BaseFrontend {
   private storage = new SimpleFsStorageProvider("data/isla-matrix.json");
   private crypto = new RustSdkCryptoStorageProvider("data/crypto");
   private client: MatrixClient | undefined;
+  private blockedUsers: string[] = ["@discord_355397336819695626:roboco.dev"];
 
   constructor(private readonly isla: Isla, private readonly logger: Logger) {
     super();
@@ -64,6 +65,9 @@ export default class MatrixFrontend extends BaseFrontend {
 
   public async handleEvent(roomId: string, event: MatrixEvent) {
     if (!this.client) return; // Will never happen, but keep ts happy
+
+    // Ignore events from blocked users
+    if (this.blockedUsers.includes(event.sender)) return;
 
     // Don't handle unhelpful events (ones that aren't text messages, are redacted, or sent by us)
     if (!("content" in event)) return;
