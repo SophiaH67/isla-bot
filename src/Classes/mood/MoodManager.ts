@@ -53,6 +53,9 @@ export class MoodManagerService implements BaseService {
   }
 
   public async switchState(state: typeof BaseState): Promise<void> {
+    // Verify that the state is a subclass of BaseState
+    if (!isSubclassOf(state, BaseState)) throw new Error("Invalid state");
+
     this.moodState = new (state as new () => BaseState)();
     await this.moodState.init();
     await this.tick();
@@ -65,4 +68,14 @@ export class MoodManagerService implements BaseService {
       await this.switchState(AwakeState);
     }
   }
+}
+
+function isSubclassOf(child: any, parent: any): boolean {
+  if (child === parent) return true;
+
+  const proto = Object.getPrototypeOf(child);
+
+  if (proto === null) return false;
+
+  return isSubclassOf(proto, parent);
 }
