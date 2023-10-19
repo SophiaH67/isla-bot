@@ -46,6 +46,6 @@ export default class UpdateCommand implements Command {
       }
     );
 
-    return t(conversation, "updateDone");
+    return t(conversation, "updateStarting");
   }
 }
