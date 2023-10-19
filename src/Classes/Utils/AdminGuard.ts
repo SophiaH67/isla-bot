@@ -1,3 +1,4 @@
+import LoggingService from "../../Services/LoggingService";
 import Conversation from "./Conversation";
 
 const allowedUsers = [
@@ -15,8 +16,14 @@ export function AdminGuard(
   const original = descriptor.value;
 
   descriptor.value = function (conversation: Conversation, args: string[]) {
-    if (!allowedUsers.includes(conversation.reference.author.id)) {
-      return "You are not allowed to use this command";
+    const uid = conversation.reference.author.id;
+
+    if (!allowedUsers.includes(uid)) {
+      const logger = conversation.isla
+        .getService(LoggingService)
+        .getLogger(AdminGuard.name);
+      logger.debug(`User "${uid}" tried to use an admin command`);
+      return "";
     }
     return original.apply(this, [conversation, args]);
   };
