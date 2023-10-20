@@ -56,7 +56,10 @@ export class MoodManagerService implements BaseService {
     // Verify that the state is a subclass of BaseState
     if (!isSubclassOf(state, BaseState)) throw new Error("Invalid state");
 
-    this.moodState = new (state as new () => BaseState)();
+    const moodState = new (state as new () => BaseState)();
+    if (typeof moodState.tick !== "function")
+      throw new Error("Missing tick function on " + state.name);
+    this.moodState = moodState;
     await this.moodState.init();
     await this.tick();
   }
