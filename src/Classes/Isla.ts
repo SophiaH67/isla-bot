@@ -26,6 +26,7 @@ import ProtocolService, { Protocol } from "../Services/ProtocolService";
 import UnexpectedRestartService from "../Services/UnexpectedRestartService";
 import KeepAliveService from "../Services/KeepAliveService";
 import { SpellCheckingService } from "../Services/SpellCheckingService";
+import { UserService } from "../Services/UserService";
 
 export default class Isla implements EventListeners {
   public redis = createClient({
@@ -149,8 +150,12 @@ export default class Isla implements EventListeners {
     );
 
     this.registerService(new PrismaService());
+    this.registerService(new UserService(this.getService(PrismaService)));
     this.registerService(
-      new MessageLoggerService(this.getService(PrismaService))
+      new MessageLoggerService(
+        this.getService(PrismaService),
+        this.getService(UserService)
+      )
     );
     this.registerService(new RssService(this.getService(PrismaService), this));
     this.registerService(
@@ -190,7 +195,6 @@ export default class Isla implements EventListeners {
 
   async onMessage(msg: IslaMessage) {
     const protocolService = this.getService(ProtocolService);
-
     if (await protocolService.isAtLeast(Protocol.PROTECT_THE_PILOT)) {
       // Only send messages to CommandService if we're in protocol 3 or higher
       this.getService(ConversationManagerService).onMessage(msg);

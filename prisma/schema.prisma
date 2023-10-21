@@ -43,7 +43,7 @@ model MessageAction {
 model LoggedMessage {
   id String @id
 
-  author   LoggedUser @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
   channel  String
@@ -56,12 +56,19 @@ model LoggedMessage {
   @@unique([channel, frontend, id])
 }
 
-model LoggedUser {
+enum UserLevel {
+  PILOT // Can only have one
+  COPILOT
+  GUEST
+}
+
+model User {
   id        String          @id
   name      String
   frontend  String
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
+  level     UserLevel       @default(GUEST)
   Message   LoggedMessage[]
 
   @@unique([id, frontend])

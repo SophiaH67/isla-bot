@@ -1,9 +1,13 @@
 import { IslaMessage } from "../Classes/interfaces/IslaMessage";
 import { BaseService } from "./BaseService";
 import { PrismaService } from "./PrismaService";
+import { UserService } from "./UserService";
 
 export class MessageLoggerService implements BaseService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService
+  ) {}
 
   async onMessage(message: IslaMessage): Promise<void> {
     return this.handleMessage(message);
@@ -14,19 +18,7 @@ export class MessageLoggerService implements BaseService {
   }
 
   private async handleMessage(message: IslaMessage): Promise<void> {
-    const author = await this.prisma.loggedUser.upsert({
-      where: {
-        id: message.author.id,
-      },
-      update: {
-        name: message.author.name,
-      },
-      create: {
-        id: message.author.id,
-        frontend: message.channel.frontend.constructor.name,
-        name: message.author.name,
-      },
-    });
+    const author = await this.userService.getUser(message);
 
     await this.prisma.loggedMessage.upsert({
       where: {

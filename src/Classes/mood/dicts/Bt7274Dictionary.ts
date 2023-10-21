@@ -15,4 +15,5 @@ export const Bt7274Dictionary = {
     "Negative. There was an error while changing the lights.",
   unknownEvalError: "Unknown evaluation error within the given script.",
   wakeUpCommand: "Negative. Vanguard class Titans are not capable of sleeping.",
+  replacepilot: "Roger. Pilot has been replaced.",
 };

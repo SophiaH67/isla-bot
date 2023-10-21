@@ -287,6 +287,7 @@ export default class MatrixFrontend extends BaseFrontend {
   }
 
   private async register(): Promise<string> {
+    console.warn("\n---MATRIX REGISTRATION---\n");
     assert(process.env.MATRIX_USERNAME, "MATRIX_USERNAME is not set");
     assert(process.env.MATRIX_PASSWORD, "MATRIX_PASSWORD is not set");
     assert(process.env.MATRIX_HOMESERVER, "MATRIX_HOMESERVER is not set");

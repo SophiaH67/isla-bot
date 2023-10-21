@@ -11,4 +11,5 @@ export const IslaExhaustedDictionary: TranslationDictionary = {
   unknownEvalError:
     "There was a problem somewhere in your stuff or something..",
   wakeUpCommand: "I'm awake, I'm awake...",
+  replacepilot: "Pilot replaced, I guess...",
 };
