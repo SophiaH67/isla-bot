@@ -24,10 +24,13 @@ import LoggingService, { Logger } from "./LoggingService";
  * information that is absolutely necessary to the pilot. This state will also
  * initiate a self-destruct sequence after 30 minutes of being in this state.
  *
+ * Commands must be explicitly allowed to run in this state.
+ *
  * GOODBYE_JACK
  *
  * This is a state set by Isla when the self-destruct sequence has been initiated.
  * This means self-destruct sequence has been initiated and cannot be de-escalated.
+ * All commands are to be strictly ignored.
  */
 export enum Protocol {
   LINK_TO_PILOT = 1,

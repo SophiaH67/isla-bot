@@ -189,7 +189,14 @@ export default class Isla implements EventListeners {
   }
 
   async onMessage(msg: IslaMessage) {
-    this.services.forEach((service) => service.onMessage?.(msg));
+    const protocolService = this.getService(ProtocolService);
+
+    if (await protocolService.isAtLeast(Protocol.PROTECT_THE_PILOT)) {
+      // Only send messages to CommandService if we're in protocol 3 or higher
+      this.getService(ConversationManagerService).onMessage(msg);
+    } else {
+      this.services.forEach((service) => service.onMessage?.(msg));
+    }
   }
 
   async onMessageUpdate(msg: IslaMessage) {

@@ -1,7 +1,7 @@
 import Conversation from "../Classes/Utils/Conversation";
 import Command from "../Classes/Utils/Command";
 import { PrismaService } from "../Services/PrismaService";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 
 export default class MessageActionCommand implements Command {
   public name = "message-action";
@@ -14,7 +14,7 @@ export default class MessageActionCommand implements Command {
   public description = "CRUD for message actions";
   public usage = "message-action <add|remove|list> [args]";
 
-  @AdminGuard
+  @PilotGuard
   public async run(
     conversation: Conversation,
     args: string[]

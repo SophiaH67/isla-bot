@@ -3,7 +3,7 @@ import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
 import Mood from "../Classes/mood/Moods";
 import { AwakeState } from "../Classes/mood/states/AwakeState";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 import { SleepBypass } from "../Classes/Utils/SleepBypass";
 import { t } from "../Classes/mood/dicts";
 
@@ -12,7 +12,7 @@ export default class WakeUpCommand implements Command {
   public description = "Attempts to wake me up";
   public usage = "wake up";
 
-  @AdminGuard
+  @PilotGuard
   @SleepBypass
   public async run(
     conversation: Conversation,

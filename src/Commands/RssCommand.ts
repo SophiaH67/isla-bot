@@ -1,7 +1,7 @@
 import { PrismaService } from "../Services/PrismaService";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 import { RssService } from "../Services/RssService";
 
 export default class RssCommand implements Command {
@@ -9,7 +9,7 @@ export default class RssCommand implements Command {
   public description = "Manage RSS feeds";
   public usage = "rss <add|remove|list> [args]";
 
-  @AdminGuard
+  @PilotGuard
   public async run(
     conversation: Conversation,
     args: string[]

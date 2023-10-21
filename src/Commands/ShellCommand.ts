@@ -1,7 +1,7 @@
 import cp from "child_process";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 
 /**
  * DataSpooler is a class that data can be written to so that it comes
@@ -56,7 +56,7 @@ export default class ShellCommand implements Command {
   public usage = "shell <command>";
   public aliases = ["shell ", "!"];
 
-  @AdminGuard
+  @PilotGuard
   public run(conversation: Conversation, args: string[]): Promise<string> {
     const [command, ...commandArgs] = args.slice(1);
 

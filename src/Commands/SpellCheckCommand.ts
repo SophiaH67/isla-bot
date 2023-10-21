@@ -1,6 +1,6 @@
 import Conversation from "../Classes/Utils/Conversation";
 import Command from "../Classes/Utils/Command";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 import { SpellCheckingService } from "../Services/SpellCheckingService";
 
 export default class SpellCheckCommand implements Command {
@@ -9,7 +9,7 @@ export default class SpellCheckCommand implements Command {
   public description = "CRUD for spell checker";
   public usage = "message-action <add|remove> [args]";
 
-  @AdminGuard
+  @PilotGuard
   public async run(
     conversation: Conversation,
     args: string[]

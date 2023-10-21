@@ -1,6 +1,6 @@
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 import LoggingService from "../Services/LoggingService";
 import { t } from "../Classes/mood/dicts";
 import UnexpectedRestartService from "../Services/UnexpectedRestartService";
@@ -10,7 +10,7 @@ export default class UpdateCommand implements Command {
   public description = "Updates Isla";
   public usage = "updateisla";
 
-  @AdminGuard
+  @PilotGuard
   public async run(
     conversation: Conversation,
     _args: string[]

@@ -1,14 +1,14 @@
 import ProtocolService, { Protocol } from "../Services/ProtocolService";
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 
 export default class ProtocolCommand implements Command {
   public aliases = ["protocol"];
   public description = "Changes protocol";
   public usage = "protocol <1|2|3>";
 
-  @AdminGuard
+  @PilotGuard
   public async run(
     _conversation: Conversation,
     args: string[]

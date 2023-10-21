@@ -1,6 +1,6 @@
 import Command from "../Classes/Utils/Command";
 import Conversation from "../Classes/Utils/Conversation";
-import { AdminGuard } from "../Classes/Utils/AdminGuard";
+import { PilotGuard } from "../Classes/Utils/PilotGuard";
 import { t } from "../Classes/mood/dicts";
 
 export default class EvalCommand implements Command {
@@ -8,7 +8,7 @@ export default class EvalCommand implements Command {
   public usage = "eval <script>";
   public aliases = ["eval "];
 
-  @AdminGuard
+  @PilotGuard
   public async run(
     conversation: Conversation,
     args: string[]
