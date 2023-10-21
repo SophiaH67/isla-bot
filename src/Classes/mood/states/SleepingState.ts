@@ -1,4 +1,5 @@
 import Mood from "../Moods";
+import { AwakeState } from "./AwakeState";
 import { BaseState, EmotionState } from "./BaseState";
 
 export class SleepingState extends BaseState {
@@ -27,7 +28,7 @@ export class SleepingState extends BaseState {
     // Check if we should wake up
     const wakeup = this.shouldWakeUp(this.maxSleepProgress);
     if (wakeup) {
-      return BaseState; // @todo: write awake state
+      return AwakeState; // @todo: write awake state
     }
 
     // Generate an emotion diff
