@@ -18,13 +18,9 @@ import TwitterEmbedService from "../Services/TwitterEmbedService";
 import { PrismaService } from "../Services/PrismaService";
 import { RssService } from "../Services/RssService";
 import { IslaChannel } from "./interfaces/IslaChannel";
-import { MessageActionService } from "../Services/MessageActionService";
 import { MessageLoggerService } from "../Services/MessageLoggerService";
 import MqttService from "../Services/MqttService";
 import LoggingService from "../Services/LoggingService";
-import ProtocolService, { Protocol } from "../Services/ProtocolService";
-import UnexpectedRestartService from "../Services/UnexpectedRestartService";
-import KeepAliveService from "../Services/KeepAliveService";
 import { SpellCheckingService } from "../Services/SpellCheckingService";
 import { UserService } from "../Services/UserService";
 
@@ -129,25 +125,7 @@ export default class Isla implements EventListeners {
     this.registerService(
       new LoggingService(this.getService(MqttService), this)
     );
-    this.registerService(
-      new ProtocolService(this.getService(LoggingService), this)
-    );
-    this.registerService(
-      new MoodManagerService(this.getService(ProtocolService))
-    );
-    this.registerService(
-      new UnexpectedRestartService(
-        this.getService(ProtocolService),
-        this.getService(LoggingService),
-        this.redis
-      )
-    );
-    this.registerService(
-      new KeepAliveService(
-        this.getService(ProtocolService),
-        this.getService(LoggingService)
-      )
-    );
+    this.registerService(new MoodManagerService());
 
     this.registerService(new PrismaService());
     this.registerService(new UserService(this.getService(PrismaService)));
@@ -158,9 +136,6 @@ export default class Isla implements EventListeners {
       )
     );
     this.registerService(new RssService(this.getService(PrismaService), this));
-    this.registerService(
-      new MessageActionService(this.getService(PrismaService))
-    );
 
     this.registerService(new TwitterEmbedService());
     this.registerService(new CommandService());
@@ -194,20 +169,10 @@ export default class Isla implements EventListeners {
   }
 
   async onMessage(msg: IslaMessage) {
-    const protocolService = this.getService(ProtocolService);
-    if (await protocolService.isAtLeast(Protocol.PROTECT_THE_PILOT)) {
-      // Only send messages to CommandService if we're in protocol 3 or higher
-      this.getService(ConversationManagerService).onMessage(msg);
-    } else {
-      this.services.forEach((service) => service.onMessage?.(msg));
-    }
+    this.services.forEach((service) => service.onMessage?.(msg));
   }
 
   async onMessageUpdate(msg: IslaMessage) {
     this.services.forEach((service) => service.onMessageUpdate?.(msg));
-  }
-
-  async onProtocolChange(protocol: Protocol) {
-    this.services.forEach((service) => service.onProtocolChange?.(protocol));
   }
 }

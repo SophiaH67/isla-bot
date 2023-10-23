@@ -2,15 +2,13 @@ import { BaseService } from "../../Services/BaseService";
 import Mood from "./Moods";
 import { BaseState, EmotionState } from "./states/BaseState";
 import { AwakeState } from "./states/AwakeState";
-import ProtocolService, { Protocol } from "../../Services/ProtocolService";
-import { Bt7274State } from "./states/Bt7274State";
 
 export class MoodManagerService implements BaseService {
   private tickDelay = 60_000;
 
   private moodState: BaseState = new AwakeState();
 
-  constructor(private readonly protocolService: ProtocolService) {}
+  constructor() {}
 
   // Actual mood factors
   private _moodInfo: EmotionState = {
@@ -62,14 +60,6 @@ export class MoodManagerService implements BaseService {
     this.moodState = moodState;
     await this.moodState.init();
     await this.tick();
-  }
-
-  async onProtocolChange(_protocol: Protocol): Promise<void> {
-    if (await this.protocolService.isAtLeast(Protocol.UPHOLD_THE_MISSION)) {
-      await this.switchState(Bt7274State);
-    } else {
-      await this.switchState(AwakeState);
-    }
   }
 }
 

@@ -2,7 +2,6 @@ import Isla from "../Classes/Isla";
 import { BaseService } from "./BaseService";
 import MqttService from "./MqttService";
 import { MqttClient } from "mqtt/*";
-import ProtocolService, { Protocol } from "./ProtocolService";
 import JoinFrontend from "../Classes/Frontends/JoinFrontend";
 
 enum Severity {
@@ -18,12 +17,7 @@ interface LogMessage {
   context?: string;
 }
 
-const minimumLogLevelPerProtocol: Record<Protocol, Severity> = {
-  [Protocol.LINK_TO_PILOT]: Severity.INFO,
-  [Protocol.UPHOLD_THE_MISSION]: Severity.DEBUG,
-  [Protocol.PROTECT_THE_PILOT]: Severity.WARN,
-  [Protocol.GOODBYE_JACK]: Severity.ERROR, // Literally nothing matters anymore, except for any exceptions
-};
+const MINIMUM_LOG_LEVEL = Severity.DEBUG;
 
 function isSeverityAtLeast(
   severity: Severity,
@@ -42,16 +36,7 @@ export class Logger {
     private readonly context?: string
   ) {}
 
-  private _protocolService?: ProtocolService;
   private _joinFrontend?: JoinFrontend;
-
-  get protocolService() {
-    if (!this._protocolService) {
-      this._protocolService = this.isla.getService(ProtocolService);
-    }
-
-    return this._protocolService;
-  }
 
   get joinFrontend() {
     if (!this._joinFrontend) {
@@ -62,8 +47,7 @@ export class Logger {
   }
 
   private async _log(message: string, severity: Severity) {
-    const currentProtocol = await this.protocolService.getProtocol();
-    const minimumLogLevel = minimumLogLevelPerProtocol[currentProtocol];
+    const minimumLogLevel = MINIMUM_LOG_LEVEL;
     const reportToPilot = isSeverityAtLeast(severity, minimumLogLevel);
 
     const logMessage: LogMessage = {

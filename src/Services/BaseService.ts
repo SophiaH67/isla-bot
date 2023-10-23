@@ -1,10 +1,8 @@
 import { IslaMessage } from "../Classes/interfaces/IslaMessage";
-import { Protocol } from "./ProtocolService";
 
 export type Events = {
   message: [IslaMessage]; // message
   messageUpdate: [IslaMessage]; // message
-  protocolChange: [Protocol]; // protocol
   start: []; // void
 };
 
