@@ -1,3 +1,0 @@
-- Prefix these states with Isla
-- Add another set of states for Bt7274, in case of protocol 3
-- Add translation files for each state
