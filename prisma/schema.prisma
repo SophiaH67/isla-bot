@@ -15,6 +15,9 @@ model RssFeed {
   url          String
   syncChannel  String
   syncFrontend String
+  retries      Int           @default(0)
+  lastError    String?
+  lastSync     DateTime      @default(now())
   createdAt    DateTime      @default(now())
   RssFeedSeen  RssFeedSeen[]
 }

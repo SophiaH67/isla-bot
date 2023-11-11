@@ -4,6 +4,16 @@ import { PrismaService } from "./PrismaService";
 import { RssFeed, Prisma } from "@prisma/client";
 import Parser from "rss-parser";
 
+function retryCountToWaitTime(retries: number) {
+  // Exponential backoff with a max of 24 hours
+  const timeInMs = Math.min(
+    1000 * 60 * 60 * 1.5 ** (retries - 1), // -1 because we start with no delay
+    1000 * 60 * 60 * 24
+  );
+
+  return timeInMs;
+}
+
 export class RssService implements BaseService {
   private static CHECK_INTERVAL = 1000 * 60 * 1;
 
@@ -81,9 +91,18 @@ export class RssService implements BaseService {
       feed.id,
       setInterval(
         () =>
-          this.checkFeed(feed.id).catch((e) =>
-            console.error(`Error checking feed ${feed.id} (${feed.url}):`, e)
-          ),
+          this.checkFeed(feed.id)
+            .catch((e) =>
+              console.error(`Error checking feed ${feed.id} (${feed.url}):`, e)
+            )
+            .finally(() => {
+              this.prisma.rssFeed.update({
+                where: { id: feed.id },
+                data: {
+                  lastSync: new Date(),
+                },
+              });
+            }),
         RssService.CHECK_INTERVAL
       )
     );
@@ -130,6 +149,13 @@ export class RssService implements BaseService {
 
     if (!feed) return;
 
+    // Get the number of retries and wait if necessary
+    const timeInMs = retryCountToWaitTime(feed.retries);
+    const onlySyncAfter = feed.lastSync.getTime() + timeInMs;
+    if (onlySyncAfter > Date.now()) {
+      return;
+    }
+
     // If there are no items, initialize the feed
     const seenItems = await this.prisma.rssFeedSeen.count({
       where: { feedId: feed.id },
@@ -144,7 +170,23 @@ export class RssService implements BaseService {
 
     const channel = this.isla.getChannel(feed.syncFrontend, feed.syncChannel);
 
-    const { items: allItems } = await this.parser.parseURL(feed.url);
+    let allItems: Parser.Item[];
+    try {
+      const res = await this.parser.parseURL(feed.url);
+      allItems = res.items;
+    } catch (e) {
+      await this.prisma.rssFeed.update({
+        where: { id: feed.id },
+        data: {
+          retries: {
+            increment: 1,
+          },
+          lastError: e instanceof Error ? e.message : "" + e,
+        },
+      });
+
+      return;
+    }
     // Filter out items we've already seen
     const itemIndices = await Promise.all(
       allItems.map((item) =>
@@ -160,8 +202,8 @@ export class RssService implements BaseService {
       .filter((_, i) => itemIndices[i] === 0)
       .sort(
         (a, b) =>
-          new Date(a.isoDate || a.pubDate || a.date || 0).getTime() -
-          new Date(b.isoDate || b.pubDate || b.date || 0).getTime()
+          new Date(a.isoDate || a.pubDate || (a as any).date || 0).getTime() -
+          new Date(b.isoDate || b.pubDate || (b as any).date || 0).getTime() // Sort by date, oldest first
       ); // Sort by date, oldest first
 
     for (const item of items) {
@@ -174,5 +216,12 @@ export class RssService implements BaseService {
         },
       });
     }
+
+    await this.prisma.rssFeed.update({
+      where: { id: feed.id },
+      data: {
+        retries: 0,
+      },
+    });
   }
 }
