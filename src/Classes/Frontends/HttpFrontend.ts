@@ -31,7 +31,11 @@ export default class HttpFrontend extends BaseFrontend {
       //   res.write(content)
       // );
 
-      const user = new IslaUser(req.ip, req.ip, false);
+      const user = new IslaUser(
+        req.ip ?? "0.0.0.0",
+        req.ip ?? "0.0.0.0",
+        false
+      );
 
       const message = new IslaMessage(
         this.isla,
